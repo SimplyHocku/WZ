@@ -15,15 +15,15 @@ public class TestSubjects extends Config {
     static String currentSection = "handbook/subjects";
     static SubjectsPage testPage;
 
-    @BeforeEach
-    public void setUp() {
-        testPage.mainBlock.shouldBe(Condition.visible);
-    }
-
     @BeforeAll
     public static void createTestPage() {
         Selenide.open(currentSection);
         testPage = new SubjectsPage();
+    }
+
+    @BeforeEach
+    public void setUp() {
+        testPage.mainBlock.shouldBe(Condition.visible);
     }
 
     @AfterEach
