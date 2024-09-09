@@ -8,6 +8,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tests.pages.ListOfCurriculaPage;
+import tests.pages.ListOfCurriculaPage.ElementContextMenu;
+import tests.pages.ListOfCurriculaPage.PageView;
+import tests.pages.CurriculaCreateOrEditPage;
+import tests.pages.ListOfCurriculaPage.PlanOption;
+import tests.pages.CurriculaCreateOrEditPage.FormEducationValue;
+import tests.pages.CurriculaCreateOrEditPage.FormEducationValue;
+import tests.pages.CurriculaCreateOrEditPage.LevelEducationValue;
 
 public class TestListOfCurricula extends Config {
     static ListOfCurriculaPage testPage;
@@ -27,17 +34,22 @@ public class TestListOfCurricula extends Config {
     }
 
     @AfterEach
-    public void clear(){
+    public void clear() {
         Selenide.refresh();
     }
 
     @Test
-    void test(){
-        testPage.waitClosingLoader(60).selectPatternsUrl().waitClosingLoader(60).selectPlansUrl().setSearchValue("test");
-        testPage.openParallelsField();
+    void test() {
+        testPage.clickAddPP();
+        testPage.selectPlanOption(PlanOption.PARALLEL);
         Selenide.sleep(3000);
-        testPage.checkParallelsOpen();
-//        testPage.selectPatternsUrl()
+        CurriculaCreateOrEditPage testPageCreatePlan = new CurriculaCreateOrEditPage();
+
+        testPageCreatePlan.setTitle("тима").setShortTitle("небо").clickFormEducation().selectFormEducationValue(FormEducationValue.OZ).clickLevelEducation();
+
+//        testPageCreatePlan.setTitle("тима").setShortTitle("небо").clickFormEducation().selectFormEducationValue(FormEducationValue.OZ).clickLevelEducation().selectLevelEducationValue(CurriculaCreateOrEditPage.LevelEducationValue.OOO).clickParallel().selectParallel("8");
+//        testPageCreatePlan.clickFgos().setFgos("ФГОС 30.0");
+        Selenide.sleep(3000);
 
 
     }
