@@ -45,10 +45,11 @@ public class TestListOfCurricula extends Config {
         Selenide.sleep(3000);
         CurriculaCreateOrEditPage testPageCreatePlan = new CurriculaCreateOrEditPage();
 
-        testPageCreatePlan.setTitle("тима").setShortTitle("небо").clickFormEducation().selectFormEducationValue(FormEducationValue.OZ).clickLevelEducation();
+        testPageCreatePlan.setTitle("тима").setShortTitle("небо").clickFormEducation().selectFormEducationValue(FormEducationValue.OZ).clickLevelEducation().selectLevelEducationValue(LevelEducationValue.OOO);
+        testPageCreatePlan.clickParallel().selectParallel("8").clickFgos().setFgos("ФГОС 30.0").clickSchedule().setSchedule("asdasd").clickWeek().setWeek("5").clickGenerate();
 
 //        testPageCreatePlan.setTitle("тима").setShortTitle("небо").clickFormEducation().selectFormEducationValue(FormEducationValue.OZ).clickLevelEducation().selectLevelEducationValue(CurriculaCreateOrEditPage.LevelEducationValue.OOO).clickParallel().selectParallel("8");
-//        testPageCreatePlan.clickFgos().setFgos("ФГОС 30.0");
+//        testPageCreatePlan.clickFgos();
         Selenide.sleep(3000);
 
 

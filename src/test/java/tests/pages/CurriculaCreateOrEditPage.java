@@ -3,20 +3,23 @@ package tests.pages;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
 import static com.codeborne.selenide.Selenide.*;
 
-public class CurriculaCreateOrEditPage {
+public class CurriculaCreateOrEditPage<T> {
 
     private final SelenideElement title = $(".Z5eYm_jkqZySVYXnxWEL.IhWORM0RCfM_znxFDK4e.ErrgUCgBVpOGk2uD7y4R.IfzJEdB1pkbERSIASybF");
     private final SelenideElement shortTitle = $$(".Z5eYm_jkqZySVYXnxWEL.IhWORM0RCfM_znxFDK4e.ErrgUCgBVpOGk2uD7y4R.IfzJEdB1pkbERSIASybF").get(1);
     private final SelenideElement formEducation = $$(".Z5eYm_jkqZySVYXnxWEL.jDrnuuOrYGEtWVtT_jwL.JN9rAf0zV1reNm6noHyf").get(0);
     private final SelenideElement levelEducation = $$(".NQp5PvHbsg3zw0dqR7BG.U9gZqh4HBcPhDx8E2kxw.Kwq17kqGR1gd2i3e8T4j.t_nfk5KQShwEOZOwRQAr").get(1);
-    private final SelenideElement parallelEducation = $$(".NQp5PvHbsg3zw0dqR7BG.U9gZqh4HBcPhDx8E2kxw.Kwq17kqGR1gd2i3e8T4j.t_nfk5KQShwEOZOwRQAr").get(1);
-    private final SelenideElement fgosEducation = $$(".Z5eYm_jkqZySVYXnxWEL.jDrnuuOrYGEtWVtT_jwL.JN9rAf0zV1reNm6noHyf").get(4);
-    private final SelenideElement scheduleEducation = $$(".Z5eYm_jkqZySVYXnxWEL.jDrnuuOrYGEtWVtT_jwL.JN9rAf0zV1reNm6noHyf").get(5);
-    private final SelenideElement weekEducation = $$(".Z5eYm_jkqZySVYXnxWEL.jDrnuuOrYGEtWVtT_jwL.JN9rAf0zV1reNm6noHyf").get(6);
+    private final SelenideElement parallelEducation = $$(".NQp5PvHbsg3zw0dqR7BG.U9gZqh4HBcPhDx8E2kxw.Kwq17kqGR1gd2i3e8T4j.t_nfk5KQShwEOZOwRQAr").get(2);
+    private final SelenideElement fgosEducation = $$(".uRZO5BUKZP9uacRiPpPg").get(3);
+    private final SelenideElement scheduleEducation = $$(".uRZO5BUKZP9uacRiPpPg").get(4);
+    private final SelenideElement weekEducation = $$(".uRZO5BUKZP9uacRiPpPg").get(5);
 
     private final SelenideElement adaptiveCheckbox = $(".NQp5PvHbsg3zw0dqR7BG.Kwq17kqGR1gd2i3e8T4j.VPTO55M4zBKFXTfcgLbE");
 
@@ -120,6 +123,10 @@ public class CurriculaCreateOrEditPage {
     public CurriculaCreateOrEditPage clickGenerate() {
         this.btnGenerate.click();
         return this;
+    }
+
+    public List<Object> getDataForPlan(){
+        return new ArrayList<>(Arrays.asList("AutomatedTitle", "AT", FormEducationValue.OZ, LevelEducationValue.OOO, "8", "ФГОС 30.0", "asdasd", "5"));
     }
 
 
