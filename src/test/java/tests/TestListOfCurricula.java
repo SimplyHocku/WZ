@@ -16,6 +16,8 @@ import tests.pages.CurriculaCreateOrEditPage.FormEducationValue;
 import tests.pages.CurriculaCreateOrEditPage.FormEducationValue;
 import tests.pages.CurriculaCreateOrEditPage.LevelEducationValue;
 
+import java.util.List;
+
 public class TestListOfCurricula extends Config {
     static ListOfCurriculaPage testPage;
 
@@ -44,12 +46,14 @@ public class TestListOfCurricula extends Config {
         testPage.selectPlanOption(PlanOption.PARALLEL);
         Selenide.sleep(3000);
         CurriculaCreateOrEditPage testPageCreatePlan = new CurriculaCreateOrEditPage();
+        List<Object> data = testPageCreatePlan.getDataForPlan();
+        testPageCreatePlan.fillPlan(testPageCreatePlan).clickGenerate();
 
-        testPageCreatePlan.setTitle("тима").setShortTitle("небо").clickFormEducation().selectFormEducationValue(FormEducationValue.OZ).clickLevelEducation().selectLevelEducationValue(LevelEducationValue.OOO);
-        testPageCreatePlan.clickParallel().selectParallel("8").clickFgos().setFgos("ФГОС 30.0").clickSchedule().setSchedule("asdasd").clickWeek().setWeek("5").clickGenerate();
-
+//        testPageCreatePlan.clickAdaptiveCheckbox();
 //        testPageCreatePlan.setTitle("тима").setShortTitle("небо").clickFormEducation().selectFormEducationValue(FormEducationValue.OZ).clickLevelEducation().selectLevelEducationValue(CurriculaCreateOrEditPage.LevelEducationValue.OOO).clickParallel().selectParallel("8");
 //        testPageCreatePlan.clickFgos();
+        Selenide.sleep(5000);
+        testPageCreatePlan.expandSubjectArea("Учебные курсы");
         Selenide.sleep(3000);
 
 
