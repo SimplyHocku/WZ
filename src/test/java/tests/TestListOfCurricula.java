@@ -3,10 +3,7 @@ package tests;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import org.WZ.config.Config;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import tests.pages.ListOfCurriculaPage;
 import tests.pages.ListOfCurriculaPage.ElementContextMenu;
 import tests.pages.ListOfCurriculaPage.PageView;
@@ -15,6 +12,7 @@ import tests.pages.ListOfCurriculaPage.PlanOption;
 import tests.pages.CurriculaCreateOrEditPage.FormEducationValue;
 import tests.pages.CurriculaCreateOrEditPage.FormEducationValue;
 import tests.pages.CurriculaCreateOrEditPage.LevelEducationValue;
+import tests.pages.CurriculaCreateOrEditPage.AdaptiveValue;
 
 import java.util.List;
 
@@ -35,27 +33,28 @@ public class TestListOfCurricula extends Config {
         testPage.divContent.shouldBe(Condition.visible);
     }
 
-    @AfterEach
-    public void clear() {
-        Selenide.refresh();
+//    @AfterEach
+//    public void clear() {
+//        Selenide.refresh();
+//    }
+
+    @Test
+    @DisplayName("WEBHTCHR-1044 - Создание учебного плана")
+    void test1044() {
+        CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
+        testPage.clickAddPP().selectPlanOption(PlanOption.PARALLEL);
+
+        curriculaTestPage.fillPlan(curriculaTestPage).clickGenerate().expandSubjectArea("Учебные курсы").clickAddSubject("Учебные курсы").
+                clickSubjectList().selectSubject("Астрономия").clickSubmitSubject();
+        curriculaTestPage.setSubjectChoice("3D-арт").savePlan();
     }
 
     @Test
-    void test() {
-        testPage.clickAddPP();
-        testPage.selectPlanOption(PlanOption.PARALLEL);
-        Selenide.sleep(3000);
-        CurriculaCreateOrEditPage testPageCreatePlan = new CurriculaCreateOrEditPage();
-        List<Object> data = testPageCreatePlan.getDataForPlan();
-        testPageCreatePlan.fillPlan(testPageCreatePlan).clickGenerate();
-
-//        testPageCreatePlan.clickAdaptiveCheckbox();
-//        testPageCreatePlan.setTitle("тима").setShortTitle("небо").clickFormEducation().selectFormEducationValue(FormEducationValue.OZ).clickLevelEducation().selectLevelEducationValue(CurriculaCreateOrEditPage.LevelEducationValue.OOO).clickParallel().selectParallel("8");
-//        testPageCreatePlan.clickFgos();
-        Selenide.sleep(5000);
-        testPageCreatePlan.expandSubjectArea("Учебные курсы");
-        Selenide.sleep(3000);
-
-
+    @DisplayName("WEBHTCHR-1131 - Редактирование учебного плана")
+    void test1131() {
+        CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
+        String planName  = (String) curriculaTestPage.getDataForPlan().get(0);
+        testPage.setSearchValue(planName).waitClosingLoader(30).openContextAndSelect(planName, ElementContextMenu.EDIT);
+        curriculaTestPage.setTitle("AutomatedTitle_EDITED").savePlan();
     }
 }

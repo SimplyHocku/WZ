@@ -17,6 +17,7 @@ public class CurriculaCreateOrEditPage {
     private final SelenideElement formEducation = $$(".Z5eYm_jkqZySVYXnxWEL.jDrnuuOrYGEtWVtT_jwL.JN9rAf0zV1reNm6noHyf").get(0);
     private final SelenideElement levelEducation = $$(".NQp5PvHbsg3zw0dqR7BG.U9gZqh4HBcPhDx8E2kxw.Kwq17kqGR1gd2i3e8T4j.t_nfk5KQShwEOZOwRQAr").get(1);
     private final SelenideElement parallelEducation = $$(".NQp5PvHbsg3zw0dqR7BG.U9gZqh4HBcPhDx8E2kxw.Kwq17kqGR1gd2i3e8T4j.t_nfk5KQShwEOZOwRQAr").get(2);
+    private final SelenideElement adaptiveAOOPFiled = $$(".NQp5PvHbsg3zw0dqR7BG.U9gZqh4HBcPhDx8E2kxw.Kwq17kqGR1gd2i3e8T4j.t_nfk5KQShwEOZOwRQAr").get(7);
     private final SelenideElement fgosEducation = $$(".uRZO5BUKZP9uacRiPpPg").get(3);
     private final SelenideElement scheduleEducation = $$(".uRZO5BUKZP9uacRiPpPg").get(4);
     private final SelenideElement weekEducation = $$(".uRZO5BUKZP9uacRiPpPg").get(5);
@@ -27,9 +28,20 @@ public class CurriculaCreateOrEditPage {
     private final SelenideElement btnGenerate = $(".wU9TSyFRFc3CpOTQBupH._XYP0roNx135HLimkPnt.w7ECsNGH4Gnnb39mQZw9.Mv0ARbCy0YnB7r_2NLvE.lyW5jmphtuQeL51jZoCw");
     private final String subjectArea = "hnWCePjI8XGQrc1e50Py xBXooQGT7LBOkVI4h7nA";
     private final SelenideElement searchSubjectField = $(".Z5eYm_jkqZySVYXnxWEL.IhWORM0RCfM_znxFDK4e.ErrgUCgBVpOGk2uD7y4R.sW0pcwdJYKkfIrzs94YW.rzaiEMnocKsMWjls6Bgw");
+    private final SelenideElement btnConfirmPattern = $(".wU9TSyFRFc3CpOTQBupH._XYP0roNx135HLimkPnt.w7ECsNGH4Gnnb39mQZw9.z14S3NJYxReEAxFG8wJF.lyW5jmphtuQeL51jZoCw");
+    private final SelenideElement btnSaveSuchPattern = $(".wU9TSyFRFc3CpOTQBupH._XYP0roNx135HLimkPnt.w7ECsNGH4Gnnb39mQZw9.Mv0ARbCy0YnB7r_2NLvE.XSReFeIOyNCXZG6tRWvh");
+    private final SelenideElement btnSave = $(".wU9TSyFRFc3CpOTQBupH._XYP0roNx135HLimkPnt.w7ECsNGH4Gnnb39mQZw9.Mv0ARbCy0YnB7r_2NLvE.lyW5jmphtuQeL51jZoCw");
 
     public CurriculaCreateOrEditPage setTitle(String value) {
-        this.title.setValue(value);
+        this.clearTitle();
+        String t = "arguments[0].value = '%s';".formatted(this.title);
+        System.out.println(t);
+        Selenide.executeJavaScript(t, this.title);
+        return this;
+    }
+
+    public CurriculaCreateOrEditPage clearTitle() {
+        Selenide.executeJavaScript("arguments[0].value = '';", this.title);
         return this;
     }
 
@@ -38,6 +50,7 @@ public class CurriculaCreateOrEditPage {
     }
 
     public CurriculaCreateOrEditPage setShortTitle(String value) {
+        this.shortTitle.setValue("");
         this.shortTitle.setValue(value);
         return this;
     }
@@ -117,9 +130,24 @@ public class CurriculaCreateOrEditPage {
         return this;
     }
 
-    public CurriculaCreateOrEditPage clickAdaptiveCheckbox(){
+    public CurriculaCreateOrEditPage clickAdaptiveCheckbox() {
         this.adaptiveCheckbox.click();
         return this;
+    }
+
+    public CurriculaCreateOrEditPage clickAdaptiveField() {
+        this.adaptiveAOOPFiled.click();
+        return this;
+    }
+
+    public CurriculaCreateOrEditPage setAdaptiveValue(AdaptiveValue value) {
+        switch (value) {
+            case INCREASE -> $x("//li[text() = 'Увеличение срока освоения ООП для ОВЗ']").click();
+            case WITHOUT -> $x("//li[text() = 'Без увеличения срока освоения ООП для ОВЗ']").click();
+            case NOT -> $x("//li[text() = 'Нецензовое образование']").click();
+        }
+        return this;
+
     }
 
     public CurriculaCreateOrEditPage clickCancel() {
@@ -132,11 +160,11 @@ public class CurriculaCreateOrEditPage {
         return this;
     }
 
-    public List<Object> getDataForPlan(){
+    public List<Object> getDataForPlan() {
         return new ArrayList<Object>(Arrays.asList("AutomatedTitle", "AT", FormEducationValue.OZ, LevelEducationValue.OOO, "8", "ФГОС 30.0", "asdasd", "5"));
     }
 
-    public CurriculaCreateOrEditPage fillPlan(CurriculaCreateOrEditPage currentPage){
+    public CurriculaCreateOrEditPage fillPlan(CurriculaCreateOrEditPage currentPage) {
         List<Object> data = this.getDataForPlan();
         currentPage.setTitle((String) data.get(0)).setShortTitle((String) data.get(1)).clickFormEducation().selectFormEducationValue((FormEducationValue) data.get(2));
         currentPage.clickLevelEducation().selectLevelEducationValue((LevelEducationValue) data.get(3)).clickParallel().selectParallel((String) data.get(4));
@@ -145,39 +173,77 @@ public class CurriculaCreateOrEditPage {
         return currentPage;
     }
 
-    public CurriculaCreateOrEditPage expandSubjectArea(String subjectAreaValue){
+    public CurriculaCreateOrEditPage setSubjectChoice(String subjectName) {
+        SelenideElement divWithChoice = $x("//div[@class = 'D0EWo2EGLwKKKkK9cgQi' and .//span[text() = '%s']]".formatted("Предметы по выбору"));
+        SelenideElement plusSubjectBtn = divWithChoice.$(".NQp5PvHbsg3zw0dqR7BG.tcpt9oq21v1w8DS00Gdq.Kwq17kqGR1gd2i3e8T4j.glgOeYZM68NoKNYki096");
+        divWithChoice.click();
+        plusSubjectBtn.click();
+        this.clickSubjectList().selectSubject(subjectName).clickSubmitSubject();
+        return this;
+    }
+
+    public CurriculaCreateOrEditPage expandSubjectArea(String subjectAreaValue) {
         $x("//div[@class = '%s' and .//span[text() = '%s']]".formatted(this.subjectArea, subjectAreaValue)).click();
         return this;
     }
 
-    public CurriculaCreateOrEditPage clickSubjectList(){
+    public CurriculaCreateOrEditPage clickSubjectList() {
         $x("//div[@class = 'mdlBeTDjk4eJspBtgT8g hETISWSYE0TZ8F37t9IZ' and .//span[text() = 'Предмет']]").click();
         return this;
     }
 
-    public CurriculaCreateOrEditPage clickSubmitSubject(){
+    public CurriculaCreateOrEditPage clickSubmitSubject() {
         $$(".NQp5PvHbsg3zw0dqR7BG.tcpt9oq21v1w8DS00Gdq.Kwq17kqGR1gd2i3e8T4j.iHQYNPDlyB9iKeoLOX6w").get(1).click();
         return this;
     }
 
-    public CurriculaCreateOrEditPage setSubjectSearchField(String value){
+    public CurriculaCreateOrEditPage setSubjectSearchField(String value) {
+        this.searchSubjectField.setValue("");
         this.searchSubjectField.setValue(value);
         return this;
     }
 
-    public CurriculaCreateOrEditPage selectSubject(String value){
+    public CurriculaCreateOrEditPage selectSubject(String value) {
         $x("//span[text() = '%s']".formatted(value)).click();
         return this;
     }
-    public CurriculaCreateOrEditPage clickCancelSubject(){
+
+    public CurriculaCreateOrEditPage clickCancelSubject() {
         $$(".NQp5PvHbsg3zw0dqR7BG.tcpt9oq21v1w8DS00Gdq.Kwq17kqGR1gd2i3e8T4j.iHQYNPDlyB9iKeoLOX6w").get(2).click();
         return this;
     }
 
-    public CurriculaCreateOrEditPage clickAddSubject(String subjectAreaValue){
+    public CurriculaCreateOrEditPage clickAddSubject(String subjectAreaValue) {
         SelenideElement areaDiv = $x("//div[@class = 'D0EWo2EGLwKKKkK9cgQi' and .//span[text() = '%s']]".formatted(subjectAreaValue));
-//        TODO
+        SelenideElement btnAddSubject = areaDiv.$x(".//span[text() = 'Добавить предмет']");
+        btnAddSubject.click();
+        return this;
+    }
 
+
+    public CurriculaCreateOrEditPage clickConfirmPattern() {
+        this.btnConfirmPattern.click();
+        return this;
+    }
+
+    public CurriculaCreateOrEditPage clickSavePatternBtn() {
+        $(".JHHSSmXrEDClsNtfHZOf.JJ4kl5s04PDNCOaw1ADj").$(".wU9TSyFRFc3CpOTQBupH._XYP0roNx135HLimkPnt.w7ECsNGH4Gnnb39mQZw9.Mv0ARbCy0YnB7r_2NLvE.lyW5jmphtuQeL51jZoCw").click();
+        return this;
+    }
+
+    public CurriculaCreateOrEditPage setPattern(String patternName) {
+        $x("//label[@class='MuiFormLabel-root MuiInputLabel-root HYUVjQy9TBuYwcyYaWjw OIZywbwrQHHOpr7_sUp6 JbNllXTS6oImUvZYZSgH MuiInputLabel-animated' and .//span[text() = '%s' ]]".formatted(patternName)).click();
+        return this;
+    }
+
+    public CurriculaCreateOrEditPage saveSuchPattern() {
+        this.btnSaveSuchPattern.click();
+        return this;
+    }
+
+    public CurriculaCreateOrEditPage savePlan() {
+        this.btnSave.click();
+        return this;
     }
 
 
@@ -192,5 +258,11 @@ public class CurriculaCreateOrEditPage {
         OOO,
         SOO,
         SPO
+    }
+
+    public enum AdaptiveValue {
+        INCREASE,
+        WITHOUT,
+        NOT
     }
 }
