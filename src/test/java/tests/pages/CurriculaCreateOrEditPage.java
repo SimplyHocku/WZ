@@ -1,12 +1,11 @@
 package tests.pages;
 
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.Keys;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 
 import static com.codeborne.selenide.Selenide.*;
 
@@ -33,10 +32,12 @@ public class CurriculaCreateOrEditPage {
     private final SelenideElement btnSave = $(".wU9TSyFRFc3CpOTQBupH._XYP0roNx135HLimkPnt.w7ECsNGH4Gnnb39mQZw9.Mv0ARbCy0YnB7r_2NLvE.lyW5jmphtuQeL51jZoCw");
 
     public CurriculaCreateOrEditPage setTitle(String value) {
-        this.clearTitle();
-        String t = "arguments[0].value = '%s';".formatted(this.title);
-        System.out.println(t);
-        Selenide.executeJavaScript(t, this.title);
+        boolean isEmpty = Objects.requireNonNull(this.title.getValue()).isEmpty();
+        if (!isEmpty){
+            this.title.sendKeys(Keys.LEFT_CONTROL, "A");
+            this.title.sendKeys(Keys.BACK_SPACE);
+        }
+        this.title.setValue(value);
         return this;
     }
 
@@ -50,13 +51,38 @@ public class CurriculaCreateOrEditPage {
     }
 
     public CurriculaCreateOrEditPage setShortTitle(String value) {
-        this.shortTitle.setValue("");
+        boolean isEmpty = Objects.requireNonNull(this.shortTitle.getValue()).isEmpty();
+        if (!isEmpty){
+            this.shortTitle.sendKeys(Keys.LEFT_CONTROL, "A");
+            this.shortTitle.sendKeys(Keys.BACK_SPACE);
+        }
         this.shortTitle.setValue(value);
         return this;
     }
 
     public String getShortTitle() {
         return this.shortTitle.getValue();
+    }
+    public String getFormEducation(){
+        return $$(".Z5eYm_jkqZySVYXnxWEL.rWtYydTGjRz8vkOQ02JO.JN9rAf0zV1reNm6noHyf").get(0).getText();
+    }
+    public String getLevel(){
+        return $$(".Z5eYm_jkqZySVYXnxWEL.rWtYydTGjRz8vkOQ02JO.JN9rAf0zV1reNm6noHyf").get(1).getText();
+    }
+    public String getParallel(){
+        return $$(".Z5eYm_jkqZySVYXnxWEL.rWtYydTGjRz8vkOQ02JO.JN9rAf0zV1reNm6noHyf").get(2).getText();
+    }
+
+    public String getFgos(){
+        return $$(".Z5eYm_jkqZySVYXnxWEL.rWtYydTGjRz8vkOQ02JO.JN9rAf0zV1reNm6noHyf").get(3).getText();
+    }
+
+    public String getSchedule(){
+        return $$(".Z5eYm_jkqZySVYXnxWEL.rWtYydTGjRz8vkOQ02JO.JN9rAf0zV1reNm6noHyf").get(4).getText();
+    }
+
+    public String getWeek(){
+        return $$(".Z5eYm_jkqZySVYXnxWEL.rWtYydTGjRz8vkOQ02JO.JN9rAf0zV1reNm6noHyf").get(5).getText();
     }
 
     public CurriculaCreateOrEditPage clickFormEducation() {
@@ -161,7 +187,7 @@ public class CurriculaCreateOrEditPage {
     }
 
     public List<Object> getDataForPlan() {
-        return new ArrayList<Object>(Arrays.asList("AutomatedTitle", "AT", FormEducationValue.OZ, LevelEducationValue.OOO, "8", "ФГОС 30.0", "asdasd", "5"));
+        return new ArrayList<Object>(Arrays.asList("AutomatedTitle", "AT", FormEducationValue.OZ, LevelEducationValue.OOO, "9", "ФГОС 3.0", "КУГ для 10У класса", "5"));
     }
 
     public CurriculaCreateOrEditPage fillPlan(CurriculaCreateOrEditPage currentPage) {
@@ -198,7 +224,11 @@ public class CurriculaCreateOrEditPage {
     }
 
     public CurriculaCreateOrEditPage setSubjectSearchField(String value) {
-        this.searchSubjectField.setValue("");
+        boolean isEmpty = Objects.requireNonNull(this.searchSubjectField.getValue()).isEmpty();
+        if (!isEmpty){
+            this.searchSubjectField.sendKeys(Keys.LEFT_CONTROL, "A");
+            this.searchSubjectField.sendKeys(Keys.BACK_SPACE);
+        }
         this.searchSubjectField.setValue(value);
         return this;
     }
@@ -243,6 +273,42 @@ public class CurriculaCreateOrEditPage {
 
     public CurriculaCreateOrEditPage savePlan() {
         this.btnSave.click();
+        return this;
+    }
+
+    public CurriculaCreateOrEditPage setHours(String subject, int cell, String value){
+        SelenideElement mainRowDiv = $x("//div[@class = ' rXMpdIDvlcwzffjY4sO4' and .//span[text() = '%s']]".formatted(subject));
+        ElementsCollection cells = mainRowDiv.$(".guSkr79ef8UMyfqDq1sZ").$$x(".//div");
+        cells.get(cell).$x(".//input").setValue(value);
+        return this;
+    }
+
+    public String getHours(String subject, int cell){
+        SelenideElement mainRowDiv = $x("//div[@class = ' rXMpdIDvlcwzffjY4sO4' and .//span[text() = '%s']]".formatted(subject));
+        ElementsCollection cells = mainRowDiv.$(".guSkr79ef8UMyfqDq1sZ").$$x(".//div");
+        return cells.get(cell).$x(".//input").getValue();
+    }
+
+
+
+    public CurriculaCreateOrEditPage copyHours(String subject, int cell){
+        SelenideElement mainRowDiv = $x("//div[@class = ' rXMpdIDvlcwzffjY4sO4' and .//span[text() = '%s']]".formatted(subject));
+        ElementsCollection cells = mainRowDiv.$(".guSkr79ef8UMyfqDq1sZ").$$x(".//div");
+        SelenideElement cell1 = cells.get(cell);
+        ElementsCollection div = cell1.$(".DUN3E57aI1kduPaVoHAR").$$x(".//*");
+        System.out.println(div.get(0));
+        System.out.println(div.get(1));
+        div.get(0).hover();
+        div.get(0).click();
+        div.get(1).hover();
+        div.get(1).click();
+
+//        System.out.println(cell1.exists());
+//        System.out.println(cell1);
+        SelenideElement svg = cells.get(cell).$x(".//use");
+//        System.out.println(cells.get(cell).$$x(".//svg").size());
+        svg.hover();
+        svg.click();
         return this;
     }
 

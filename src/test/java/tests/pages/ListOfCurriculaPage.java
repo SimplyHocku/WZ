@@ -1,8 +1,14 @@
 package tests.pages;
 
+import com.codeborne.selenide.Condition;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assertions.*;
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.Keys;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static com.codeborne.selenide.Selenide.*;
@@ -44,6 +50,11 @@ public class ListOfCurriculaPage {
     }
 
     public ListOfCurriculaPage setSearchValue(String value) {
+        boolean isEmpty = Objects.requireNonNull(this.searchField.getValue()).isEmpty();
+        if (!isEmpty){
+            this.searchField.sendKeys(Keys.LEFT_CONTROL, "A");
+            this.searchField.sendKeys(Keys.BACK_SPACE);
+        }
         this.searchField.setValue(value);
         return this;
     }
