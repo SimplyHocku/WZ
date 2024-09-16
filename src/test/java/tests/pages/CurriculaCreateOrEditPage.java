@@ -3,7 +3,9 @@ package tests.pages;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.Point;
 
 import java.util.*;
 
@@ -294,21 +296,18 @@ public class CurriculaCreateOrEditPage {
     public CurriculaCreateOrEditPage copyHours(String subject, int cell){
         SelenideElement mainRowDiv = $x("//div[@class = ' rXMpdIDvlcwzffjY4sO4' and .//span[text() = '%s']]".formatted(subject));
         ElementsCollection cells = mainRowDiv.$(".guSkr79ef8UMyfqDq1sZ").$$x(".//div");
-        SelenideElement cell1 = cells.get(cell);
-        ElementsCollection div = cell1.$(".DUN3E57aI1kduPaVoHAR").$$x(".//*");
-        System.out.println(div.get(0));
-        System.out.println(div.get(1));
-        div.get(0).hover();
-        div.get(0).click();
-        div.get(1).hover();
-        div.get(1).click();
+        SelenideElement cell1 = cells.get(3);
+        Dimension cellSize = cell1.getSize();
+        System.out.println(cellSize);
 
-//        System.out.println(cell1.exists());
-//        System.out.println(cell1);
-        SelenideElement svg = cells.get(cell).$x(".//use");
-//        System.out.println(cells.get(cell).$$x(".//svg").size());
-        svg.hover();
-        svg.click();
+//        SelenideElement svg = cell1.$$x(".//*").get(0);
+
+        cell1.hover();
+        actions().moveByOffset(5,10 ).click().perform();;
+        SelenideElement svg = cell1.$$x(".//*").get(0);
+//        actions().moveToElement(svg).click().perform();
+        //TODO
+        System.out.println($(".qjlgSJtFv9EtWcffmHst").exists());
         return this;
     }
 
