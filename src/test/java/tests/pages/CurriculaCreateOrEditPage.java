@@ -1,8 +1,10 @@
 package tests.pages;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import org.assertj.core.api.Assertions;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.Point;
@@ -21,6 +23,7 @@ public class CurriculaCreateOrEditPage {
     private final SelenideElement adaptiveAOOPFiled = $$(".NQp5PvHbsg3zw0dqR7BG.U9gZqh4HBcPhDx8E2kxw.Kwq17kqGR1gd2i3e8T4j.t_nfk5KQShwEOZOwRQAr").get(7);
     private final SelenideElement fgosEducation = $$(".uRZO5BUKZP9uacRiPpPg").get(3);
     private final SelenideElement scheduleEducation = $$(".uRZO5BUKZP9uacRiPpPg").get(4);
+    public final SelenideElement scheduleElem = $$(".Z5eYm_jkqZySVYXnxWEL.rWtYydTGjRz8vkOQ02JO.JN9rAf0zV1reNm6noHyf").get(4);
     private final SelenideElement weekEducation = $$(".uRZO5BUKZP9uacRiPpPg").get(5);
 
     private final SelenideElement adaptiveCheckbox = $(".NQp5PvHbsg3zw0dqR7BG.Kwq17kqGR1gd2i3e8T4j.VPTO55M4zBKFXTfcgLbE");
@@ -33,12 +36,14 @@ public class CurriculaCreateOrEditPage {
     private final SelenideElement btnSaveSuchPattern = $(".wU9TSyFRFc3CpOTQBupH._XYP0roNx135HLimkPnt.w7ECsNGH4Gnnb39mQZw9.Mv0ARbCy0YnB7r_2NLvE.XSReFeIOyNCXZG6tRWvh");
     private final SelenideElement btnSave = $(".wU9TSyFRFc3CpOTQBupH._XYP0roNx135HLimkPnt.w7ECsNGH4Gnnb39mQZw9.Mv0ARbCy0YnB7r_2NLvE.lyW5jmphtuQeL51jZoCw");
 
+    public  final SelenideElement editLabel = $x("//h4[contains(text(), 'Редактирование  учебного плана')]");
     public CurriculaCreateOrEditPage setTitle(String value) {
         boolean isEmpty = Objects.requireNonNull(this.title.getValue()).isEmpty();
         if (!isEmpty){
             this.title.sendKeys(Keys.LEFT_CONTROL, "A");
             this.title.sendKeys(Keys.BACK_SPACE);
         }
+        this.title.shouldHave(Condition.empty);
         this.title.setValue(value);
         return this;
     }
@@ -279,8 +284,11 @@ public class CurriculaCreateOrEditPage {
     }
 
     public CurriculaCreateOrEditPage setHours(String subject, int cell, String value){
+        System.out.println(subject);
         SelenideElement mainRowDiv = $x("//div[@class = ' rXMpdIDvlcwzffjY4sO4' and .//span[text() = '%s']]".formatted(subject));
-        ElementsCollection cells = mainRowDiv.$(".guSkr79ef8UMyfqDq1sZ").$$x(".//div");
+        SelenideElement subjectNameDiv = mainRowDiv.$x(".//div[span[text() = '%s']]".formatted(subject)).parent().parent();
+        SelenideElement divCells = subjectNameDiv.sibling(0);
+        ElementsCollection cells = divCells.$$x(".//div");
         cells.get(cell).$x(".//input").setValue(value);
         return this;
     }
@@ -293,21 +301,42 @@ public class CurriculaCreateOrEditPage {
 
 
 
-    public CurriculaCreateOrEditPage copyHours(String subject, int cell){
+    public CurriculaCreateOrEditPage copyHours(String subject, int cellNum, WeekCopyValue mode){
         SelenideElement mainRowDiv = $x("//div[@class = ' rXMpdIDvlcwzffjY4sO4' and .//span[text() = '%s']]".formatted(subject));
-        ElementsCollection cells = mainRowDiv.$(".guSkr79ef8UMyfqDq1sZ").$$x(".//div");
-        SelenideElement cell1 = cells.get(3);
-        Dimension cellSize = cell1.getSize();
-        System.out.println(cellSize);
+        SelenideElement subjectNameDiv = mainRowDiv.$x(".//div[span[text() = '%s']]".formatted(subject)).parent().parent();
+        SelenideElement divCells = subjectNameDiv.sibling(0).$x(".//div[@class = ' guSkr79ef8UMyfqDq1sZ']");
+        ElementsCollection cells = divCells.$$x(".//div");
+        SelenideElement cell = cells.get(cellNum);
+        actions().moveToElement(cell).moveByOffset(5,10 ).click().perform();
 
-//        SelenideElement svg = cell1.$$x(".//*").get(0);
+        switch (mode){
+            case EVERY -> $x("//button[text() = 'На каждую неделю']").click();
+            case INWEEK -> $x("//button[text() = 'Через неделю']").click();
+            case INTWOWEEKS -> $x("//button[text() = 'Через две недели']").click();
+        }
 
-        cell1.hover();
-        actions().moveByOffset(5,10 ).click().perform();;
-        SelenideElement svg = cell1.$$x(".//*").get(0);
-//        actions().moveToElement(svg).click().perform();
-        //TODO
-        System.out.println($(".qjlgSJtFv9EtWcffmHst").exists());
+        return this;
+    }
+
+    public CurriculaCreateOrEditPage checkAllCellsExistsValue(String subject, String expectedValue){
+        SelenideElement rowContent = $x("//div[@class = ' rXMpdIDvlcwzffjY4sO4' and .//span[text() = '%s']]".formatted(subject));
+        SelenideElement subjectNameDiv = rowContent.$x(".//div[span[text() = '%s']]".formatted(subject)).parent().parent();
+        SelenideElement divCells = subjectNameDiv.sibling(0).$x(".//div[@class = ' guSkr79ef8UMyfqDq1sZ']");
+        ElementsCollection inputs = divCells.$$x(".//input");
+        Assertions.assertThat(inputs).as("Во всех ячейках правильное значение").allMatch(elem -> Objects.equals(elem.getValue(), expectedValue));
+        return this;
+    }
+
+    public CurriculaCreateOrEditPage checkCellsExpectedOrContinueValue(String subject, String expectedValue){
+        SelenideElement rowContent = $x("//div[@class = ' rXMpdIDvlcwzffjY4sO4' and .//span[text() = '%s']]".formatted(subject));
+        SelenideElement subjectNameDiv = rowContent.$x(".//div[span[text() = '%s']]".formatted(subject)).parent().parent();
+        SelenideElement divCells = subjectNameDiv.sibling(0).$x(".//div[@class = ' guSkr79ef8UMyfqDq1sZ']");
+        ElementsCollection inputs = divCells.$$x(".//input");
+        Assertions.assertThat(inputs).as("Во всех ячейках правильное значение").allMatch(elem -> {
+            String currentValue = elem.getValue();
+            assert currentValue != null;
+            return currentValue.equals("0") || currentValue.equals(expectedValue);
+        });
         return this;
     }
 
@@ -329,5 +358,11 @@ public class CurriculaCreateOrEditPage {
         INCREASE,
         WITHOUT,
         NOT
+    }
+
+    public enum WeekCopyValue{
+        EVERY,
+        INWEEK,
+        INTWOWEEKS
     }
 }

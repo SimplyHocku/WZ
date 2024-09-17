@@ -56,7 +56,7 @@ public abstract class Config {
 
         btnLogin.click();
         loginInput.setValue("63437117988");
-        passwordInput.setValue("password");
+        passwordInput.setValue("Nsdue23!");
         btnForLogin.click();
         saveToken();
 
