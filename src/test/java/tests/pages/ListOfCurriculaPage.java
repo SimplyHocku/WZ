@@ -26,6 +26,8 @@ public class ListOfCurriculaPage {
     private final SelenideElement pageModeDiv = $(".HAk0sC05RiMUhsw82i5K");
     private final ElementsCollection btnForChangePage = $$(".NQp5PvHbsg3zw0dqR7BG.LMvmdpuoCw8WIV8URMvV.D1PQTgffcK3m41s8FACQ");
     private final SelenideElement loader = $x("//img[@alt = 'loader']");
+    public final SelenideElement listCurriculaTable = $(".u5_QD2DGQghUCbrvNFvk");
+
 
     public ListOfCurriculaPage selectPlansUrl() {
         this.plansUrl.click();
@@ -136,7 +138,7 @@ public class ListOfCurriculaPage {
         switch (mode) {
             case EDIT -> $x("//button[text() = 'Редактировать']").click();
             case DOWNLOAD -> $x("//button[text() = 'Скачать']").click();
-            case DELETE -> $x("//button[text() = 'Удалить']").click();
+            case DELETE -> $x("//span[text() = 'Удалить']").click();
         }
     }
 
@@ -163,6 +165,15 @@ public class ListOfCurriculaPage {
     }
     public ListOfCurriculaPage clickNextPage(){
         this.btnForChangePage.get(1).click();
+        return this;
+    }
+
+    public ListOfCurriculaPage clickCancelDeletePlan(){
+        $(".wU9TSyFRFc3CpOTQBupH._XYP0roNx135HLimkPnt.w7ECsNGH4Gnnb39mQZw9.XmjWECPjgnwA1tkkgKBr.XSReFeIOyNCXZG6tRWvh").click();
+        return this;
+    }
+    public ListOfCurriculaPage clickDeletePlan(){
+        $(".wU9TSyFRFc3CpOTQBupH._XYP0roNx135HLimkPnt.w7ECsNGH4Gnnb39mQZw9.Qqa48q8H4Fb9WrqoZMuB.lyW5jmphtuQeL51jZoCw").click();
         return this;
     }
 

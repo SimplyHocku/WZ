@@ -197,8 +197,12 @@ public class CurriculaCreateOrEditPage {
         return new ArrayList<Object>(Arrays.asList("AutomatedTitle", "AT", FormEducationValue.OZ, LevelEducationValue.OOO, "9", "ФГОС 3.0", "КУГ для 10У класса", "5"));
     }
 
-    public CurriculaCreateOrEditPage fillPlan(CurriculaCreateOrEditPage currentPage) {
-        List<Object> data = this.getDataForPlan();
+    public List<Object> getDataForPatternPlan() {
+        return new ArrayList<Object>(Arrays.asList("AutomatedTitlePattern", "ATP", FormEducationValue.OZ, LevelEducationValue.OOO, "9", "ФГОС 3.0", "КУГ для 10У класса", "5"));
+    }
+
+
+    public CurriculaCreateOrEditPage fillPlan(CurriculaCreateOrEditPage currentPage, List<Object> data) {
         currentPage.setTitle((String) data.get(0)).setShortTitle((String) data.get(1)).clickFormEducation().selectFormEducationValue((FormEducationValue) data.get(2));
         currentPage.clickLevelEducation().selectLevelEducationValue((LevelEducationValue) data.get(3)).clickParallel().selectParallel((String) data.get(4));
         currentPage.clickFgos().setFgos((String) data.get(5)).clickSchedule().setSchedule((String) data.get(6));
@@ -284,7 +288,6 @@ public class CurriculaCreateOrEditPage {
     }
 
     public CurriculaCreateOrEditPage setHours(String subject, int cell, String value){
-        System.out.println(subject);
         SelenideElement mainRowDiv = $x("//div[@class = ' rXMpdIDvlcwzffjY4sO4' and .//span[text() = '%s']]".formatted(subject));
         SelenideElement subjectNameDiv = mainRowDiv.$x(".//div[span[text() = '%s']]".formatted(subject)).parent().parent();
         SelenideElement divCells = subjectNameDiv.sibling(0);
