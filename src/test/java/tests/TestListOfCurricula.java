@@ -23,8 +23,7 @@ import org.assertj.core.api.Assertions.*;
 import java.util.List;
 import java.util.Objects;
 
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -262,6 +261,66 @@ public class TestListOfCurricula extends Config {
         });
     }
 
+    @Test
+    @Order(21)
+    @DisplayName("WEBHTCHR-1220 - Чекбокс Адаптированная программа - Выпадающий список Нагрузка АООП УП")
+    void test1220() {
+        testPage.waitClosingLoader(30).listCurriculaTable.shouldBe(Condition.visible);
+        testPage.clickAddPP().selectPlanOption(PlanOption.PARALLEL);
+        CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
+        curriculaTestPage.clickAdaptiveCheckbox().clickLevelEducation().selectLevelEducationValue(LevelEducationValue.OOO).
+                clickAdaptiveField().setAdaptiveValue(AdaptiveValue.INCREASE);
+        assertEquals("Увеличение срока освоения ООП для ОВЗ",curriculaTestPage.getAdaptiveFieldValue());
+        curriculaTestPage.clickAdaptiveCheckbox();
+        $x("//span[text() = 'Нагрузка АООП']").shouldNotBe(Condition.visible);
+    }
+
+    @Test
+    @Order(22)
+    @DisplayName("WEBHTCHR-1223 - Кнопка Сгенерировать пустой план УП")
+    void test1223() {
+        testPage.waitClosingLoader(30).listCurriculaTable.shouldBe(Condition.visible);
+        testPage.clickAddPP().selectPlanOption(PlanOption.PARALLEL);
+        CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
+        curriculaTestPage.fillPlan(curriculaTestPage, curriculaTestPage.getDataForPlanTest()).clickGenerate();
+        $x("//span[text() = 'Наполнение учебного плана']").shouldBe(Condition.visible);
+    }
+
+    @Test
+    @Order(23)
+    @DisplayName("WEBHTCHR-1246 - Кнопка Сгенерировать пустой план УП шаблон")
+    void test1246() {
+        testPage.waitClosingLoader(30).listCurriculaTable.shouldBe(Condition.visible);
+        testPage.selectPatternsUrl().clickAddPP();
+        CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
+        curriculaTestPage.fillPlan(curriculaTestPage, curriculaTestPage.getDataForPlanTest()).clickGenerate();
+        $x("//span[text() = 'Наполнение учебного плана']").shouldBe(Condition.visible);
+    }
+
+    @Test
+    @Order(24)
+    @DisplayName("WEBHTCHR-1248 - Переключатель По предметам УП")
+    void test1248() {
+//        TODO
+    }
+
+    @Test
+    @Order(25)
+    @DisplayName("WEBHTCHR-1249 - Список предметной области УП")
+    void test1249() {
+        testPage.waitClosingLoader(30).listCurriculaTable.shouldBe(Condition.visible);
+        testPage.clickAddPP().selectPlanOption(PlanOption.PARALLEL);
+        CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
+        curriculaTestPage.fillPlan(curriculaTestPage, curriculaTestPage.getDataForPlanTest()).clickGenerate();
+        $x("//span[text() = 'Наполнение учебного плана']").shouldBe(Condition.visible);
+        curriculaTestPage.expandSubjectArea("Учебные курсы");
+        SelenideElement btn = $x("//span[text() = 'Добавить предмет']");
+        actions().moveToElement(btn).perform();
+        btn.shouldBe(Condition.visible);
+        curriculaTestPage.expandSubjectArea("Учебные курсы");
+        $x("//span[text() = 'Добавить предмет']").shouldNotBe(Condition.visible);
+    }
+
 
     @Test
     @Disabled
@@ -269,7 +328,7 @@ public class TestListOfCurricula extends Config {
         CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
         testPage.clickAddPP().selectPlanOption(PlanOption.PARALLEL);
 
-        curriculaTestPage.fillPlan(curriculaTestPage, curriculaTestPage.getDataForPlan()).clickGenerate().expandSubjectArea("Учебные курсы").clickAddSubject("Учебные курсы").
+        curriculaTestPage.fillPlan(curriculaTestPage, curriculaTestPage.getDataForPlanTest()).clickGenerate().expandSubjectArea("Учебные курсы").clickAddSubject("Учебные курсы").
                 clickSubjectList().selectSubject("Астрономия").clickSubmitSubject();
         curriculaTestPage.setSubjectChoice("3D-арт");
 

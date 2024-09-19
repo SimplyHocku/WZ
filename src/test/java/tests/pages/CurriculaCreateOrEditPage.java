@@ -173,6 +173,10 @@ public class CurriculaCreateOrEditPage {
         return this;
     }
 
+    public String getAdaptiveFieldValue(){
+        return $$(".Z5eYm_jkqZySVYXnxWEL.rWtYydTGjRz8vkOQ02JO.JN9rAf0zV1reNm6noHyf").get(1).getText();
+    }
+
     public CurriculaCreateOrEditPage setAdaptiveValue(AdaptiveValue value) {
         switch (value) {
             case INCREASE -> $x("//li[text() = 'Увеличение срока освоения ООП для ОВЗ']").click();
@@ -199,6 +203,10 @@ public class CurriculaCreateOrEditPage {
 
     public List<Object> getDataForPatternPlan() {
         return new ArrayList<Object>(Arrays.asList("AutomatedTitlePattern", "ATP", FormEducationValue.OZ, LevelEducationValue.OOO, "9", "ФГОС 3.0", "КУГ для 10У класса", "5"));
+    }
+
+    public List<Object> getDataForPlanTest() {
+        return new ArrayList<Object>(Arrays.asList("TEST_удалиМеня", "ATP", FormEducationValue.OZ, LevelEducationValue.OOO, "9", "ФГОС 3.0", "КУГ для 10У класса", "5"));
     }
 
 
