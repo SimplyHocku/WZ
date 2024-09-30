@@ -174,6 +174,31 @@ public class TestListOfCurricula extends Config {
                 setSubjectChoice("3D-арт").setHoursSubChoice(1,"1").copyHoursSubjectChoice(1, WeekCopyValue.EVERY).savePlan();
         Selenide.sleep(1000);
     }
+    @Test
+    @Order(8)
+    @DisplayName("Проверка на соответствие шаблона УП")
+    void testCheckCreateCurriculaPattern(){
+        CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
+        List<Object> data = curriculaTestPage.getDataForPatternPlan();
+        String planName = (String) curriculaTestPage.getDataForPatternPlan().get(0);
+        SelenideElement rowElement = $x("//tr[@class = 'znu3DrCGSbeQf74VU_sQ' and contains(.//text(), '%s')]".formatted(planName));
+
+        testPage.selectPatternsUrl().waitClosingLoader(30).setSearchValue(planName).waitClosingLoader(30);
+        rowElement.shouldBe(Condition.exist);
+        testPage.openContextAndSelect(planName, ElementContextMenu.EDIT);
+        $(".TPZSWYDuKpGEBOskP6qJ").shouldBe(Condition.exist);
+        assertEquals(data.get(0), curriculaTestPage.getTitle(), "Заголовок не совпадает");
+        assertEquals(data.get(1), curriculaTestPage.getShortTitle(), "Краткий заголовок не совпадает");
+        assertEquals("Очно-заочная", curriculaTestPage.getFormEducation(), "Форма обучения");
+        assertEquals("ООО", curriculaTestPage.getLevel(), "Уровень образования не совпадает");
+        assertEquals((String) data.get(4), curriculaTestPage.getParallel(), "Параллель не совпадает");
+        assertEquals((String) data.get(5), curriculaTestPage.getFgos(), "ФГОС не совпадает");
+        assertEquals((String) data.get(7), curriculaTestPage.getWeek(), "Неделя не совпадает");
+        curriculaTestPage.scheduleElem.shouldHave(Condition.text((String) data.get(6)));
+        assertEquals((String) data.get(6), curriculaTestPage.getSchedule(), "График не совпадет");
+
+        curriculaTestPage.expandSubjectArea("Учебные курсы").checkAllCellsExistsValue("Инженерная графика", "2");
+    }
 
     @Test
     @Order(14)
