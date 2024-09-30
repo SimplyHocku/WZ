@@ -151,7 +151,7 @@ public class TestListOfCurricula extends Config {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     @DisplayName("Проверка удалился ли УП")
     @DisabledIf("isFirstTestFailed")
     void testCheckDeletedPlan() {
@@ -161,30 +161,29 @@ public class TestListOfCurricula extends Config {
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     @DisplayName("WEBHTCHR-1067 - создание шаблона УП")
     @Disabled
     void test1067() {
         testPage.listCurriculaTable.shouldBe(Condition.exist);
         testPage.selectPatternsUrl().clickAddPP();
         CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
-        curriculaTestPage.fillPlan(curriculaTestPage, curriculaTestPage.getDataForPatternPlan()).clickGenerate().expandSubjectArea("Учебные курсы");
-//        clickAddSubject();
-        Selenide.sleep(3000);
-
-
-//TODO
+        curriculaTestPage.fillPlan(curriculaTestPage, curriculaTestPage.getDataForPatternPlan()).clickGenerate().expandSubjectArea("Учебные курсы").
+                clickAddSubject("Учебные курсы").clickSubjectList().selectSubject("Инженерная графика").clickSubmitSubject().
+                setHours("Инженерная графика", 1, "2").copyHours("Инженерная графика", 1, WeekCopyValue.EVERY).
+                setSubjectChoice("3D-арт").setHoursSubChoice(1,"1").copyHoursSubjectChoice(1, WeekCopyValue.EVERY).savePlan();
+        Selenide.sleep(1000);
     }
 
     @Test
-    @Order(13)
+    @Order(14)
     @DisplayName("WEBHTCHR-1173 - вкладка шаблоны учебных планов")
     void test1173() {
         testPage.selectPatternsUrl().waitClosingLoader(30).listCurriculaTable.shouldBe(Condition.visible);
     }
 
     @Test
-    @Order(14)
+    @Order(15)
     @DisplayName("WEBHTCHR-1174 - кнопка скачать план")
     void test1174() {
         testPage.waitClosingLoader(30).listCurriculaTable.shouldBe(Condition.visible);
@@ -193,7 +192,7 @@ public class TestListOfCurricula extends Config {
     }
 
     @Test
-    @Order(15)
+    @Order(16)
     @DisplayName("WEBHTCHR-1175 - Кнопка Добавить учебный план")
     void test1175() {
         testPage.waitClosingLoader(30).listCurriculaTable.shouldBe(Condition.visible);
@@ -201,17 +200,16 @@ public class TestListOfCurricula extends Config {
     }
 
     @Test
-    @Order(16)
+    @Order(17)
     @DisplayName("WEBHTCHR-1176 - параллель учебных планов")
     void test1176() {
         testPage.waitClosingLoader(30).listCurriculaTable.shouldBe(Condition.visible);
         testPage.openParallelsField().setParallel("10").waitClosingLoader(30);
         ElementsCollection values = $(".hXA2Gn8zqZ4xBmiyEWhH").$$x(".//span[translate(text(), '0123456789', '') = '']");
         org.assertj.core.api.Assertions.assertThat(values).as("Отображаются только выбранные параллели").allMatch(elem -> {
-            if (elem.text().isEmpty()){
+            if (elem.text().isEmpty()) {
                 return true;
-            }
-            else if(elem.text().equals("10")){
+            } else if (elem.text().equals("10")) {
                 return true;
             }
             return false;
@@ -219,7 +217,7 @@ public class TestListOfCurricula extends Config {
     }
 
     @Test
-    @Order(17)
+    @Order(18)
     @DisplayName("WEBHTCHR-1182 - вкладка учебные планы")
     void test1182() {
         testPage.waitClosingLoader(30).listCurriculaTable.shouldBe(Condition.visible);
@@ -227,15 +225,16 @@ public class TestListOfCurricula extends Config {
     }
 
     @Test
-    @Order(18)
+    @Order(19)
     @DisplayName("WEBHTCHR-1224 - кнопка скачать шаблон")
     void test1224() {
         testPage.waitClosingLoader(30).selectPatternsUrl().listCurriculaTable.shouldBe(Condition.visible);
         testPage.openParallelsField().setParallel("9").setSearchValue("НЕ_УДАЛЯЙ_ШАБ!!!").waitClosingLoader(30).setCheckbox("НЕ_УДАЛЯЙ_ШАБ!!!", true).clickBtnDownload();
         $x("//span[text() = 'Сохранено']").shouldBe(Condition.exist);
     }
+
     @Test
-    @Order(19)
+    @Order(20)
     @DisplayName("WEBHTCHR-1183 - кнопка добавить шаблон учебного плана")
     void test1183() {
         testPage.waitClosingLoader(30).selectPatternsUrl().listCurriculaTable.shouldBe(Condition.visible);
@@ -244,17 +243,16 @@ public class TestListOfCurricula extends Config {
     }
 
     @Test
-    @Order(20)
+    @Order(21)
     @DisplayName("WEBHTCHR-1185 - параллель шаблонов учебных планов")
     void test1185() {
         testPage.waitClosingLoader(30).listCurriculaTable.shouldBe(Condition.visible);
         testPage.selectPatternsUrl().waitClosingLoader(30).openParallelsField().setParallel("10").waitClosingLoader(30);
         ElementsCollection values = $(".hXA2Gn8zqZ4xBmiyEWhH").$$x(".//span[translate(text(), '0123456789', '') = '']");
         org.assertj.core.api.Assertions.assertThat(values).as("Отображаются только выбранные параллели").allMatch(elem -> {
-            if (elem.text().isEmpty()){
+            if (elem.text().isEmpty()) {
                 return true;
-            }
-            else if(elem.text().equals("10")){
+            } else if (elem.text().equals("10")) {
                 return true;
             }
             return false;
@@ -262,7 +260,7 @@ public class TestListOfCurricula extends Config {
     }
 
     @Test
-    @Order(21)
+    @Order(22)
     @DisplayName("WEBHTCHR-1220 - Чекбокс Адаптированная программа - Выпадающий список Нагрузка АООП УП")
     void test1220() {
         testPage.waitClosingLoader(30).listCurriculaTable.shouldBe(Condition.visible);
@@ -270,13 +268,13 @@ public class TestListOfCurricula extends Config {
         CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
         curriculaTestPage.clickAdaptiveCheckbox().clickLevelEducation().selectLevelEducationValue(LevelEducationValue.OOO).
                 clickAdaptiveField().setAdaptiveValue(AdaptiveValue.INCREASE);
-        assertEquals("Увеличение срока освоения ООП для ОВЗ",curriculaTestPage.getAdaptiveFieldValue());
+        assertEquals("Увеличение срока освоения ООП для ОВЗ", curriculaTestPage.getAdaptiveFieldValue());
         curriculaTestPage.clickAdaptiveCheckbox();
         $x("//span[text() = 'Нагрузка АООП']").shouldNotBe(Condition.visible);
     }
 
     @Test
-    @Order(22)
+    @Order(23)
     @DisplayName("WEBHTCHR-1223 - Кнопка Сгенерировать пустой план УП")
     void test1223() {
         testPage.waitClosingLoader(30).listCurriculaTable.shouldBe(Condition.visible);
@@ -287,7 +285,7 @@ public class TestListOfCurricula extends Config {
     }
 
     @Test
-    @Order(23)
+    @Order(24)
     @DisplayName("WEBHTCHR-1246 - Кнопка Сгенерировать пустой план УП шаблон")
     void test1246() {
         testPage.waitClosingLoader(30).listCurriculaTable.shouldBe(Condition.visible);
@@ -298,14 +296,14 @@ public class TestListOfCurricula extends Config {
     }
 
     @Test
-    @Order(24)
+    @Order(25)
     @DisplayName("WEBHTCHR-1248 - Переключатель По предметам УП")
     void test1248() {
 //        TODO
     }
 
     @Test
-    @Order(25)
+    @Order(26)
     @DisplayName("WEBHTCHR-1249 - Список предметной области УП")
     void test1249() {
         testPage.waitClosingLoader(30).listCurriculaTable.shouldBe(Condition.visible);

@@ -31,6 +31,7 @@ public class CurriculaCreateOrEditPage {
     private final SelenideElement btnCancel = $(".wU9TSyFRFc3CpOTQBupH._XYP0roNx135HLimkPnt.w7ECsNGH4Gnnb39mQZw9.XmjWECPjgnwA1tkkgKBr.XSReFeIOyNCXZG6tRWvh");
     private final SelenideElement btnGenerate = $(".wU9TSyFRFc3CpOTQBupH._XYP0roNx135HLimkPnt.w7ECsNGH4Gnnb39mQZw9.Mv0ARbCy0YnB7r_2NLvE.lyW5jmphtuQeL51jZoCw");
     private final String subjectArea = "hnWCePjI8XGQrc1e50Py xBXooQGT7LBOkVI4h7nA";
+    private final SelenideElement subjectChoiceAdd = $(".NQp5PvHbsg3zw0dqR7BG.tcpt9oq21v1w8DS00Gdq.Kwq17kqGR1gd2i3e8T4j.glgOeYZM68NoKNYki096");
     private final SelenideElement searchSubjectField = $(".Z5eYm_jkqZySVYXnxWEL.IhWORM0RCfM_znxFDK4e.ErrgUCgBVpOGk2uD7y4R.sW0pcwdJYKkfIrzs94YW.rzaiEMnocKsMWjls6Bgw");
     private final SelenideElement btnConfirmPattern = $(".wU9TSyFRFc3CpOTQBupH._XYP0roNx135HLimkPnt.w7ECsNGH4Gnnb39mQZw9.z14S3NJYxReEAxFG8wJF.lyW5jmphtuQeL51jZoCw");
     private final SelenideElement btnSaveSuchPattern = $(".wU9TSyFRFc3CpOTQBupH._XYP0roNx135HLimkPnt.w7ECsNGH4Gnnb39mQZw9.Mv0ARbCy0YnB7r_2NLvE.XSReFeIOyNCXZG6tRWvh");
@@ -202,7 +203,7 @@ public class CurriculaCreateOrEditPage {
     }
 
     public List<Object> getDataForPatternPlan() {
-        return new ArrayList<Object>(Arrays.asList("AutomatedTitlePattern", "ATP", FormEducationValue.OZ, LevelEducationValue.OOO, "9", "ФГОС 3.0", "КУГ для 10У класса", "5"));
+        return new ArrayList<Object>(Arrays.asList("AutomatedTitlePattern", "ATP", FormEducationValue.OZ, LevelEducationValue.OOO, "9", "ФГОС 2.0", "Даня(24-25)", "5"));
     }
 
     public List<Object> getDataForPlanTest() {
@@ -220,9 +221,7 @@ public class CurriculaCreateOrEditPage {
 
     public CurriculaCreateOrEditPage setSubjectChoice(String subjectName) {
         SelenideElement divWithChoice = $x("//div[@class = 'D0EWo2EGLwKKKkK9cgQi' and .//span[text() = '%s']]".formatted("Предметы по выбору"));
-        SelenideElement plusSubjectBtn = divWithChoice.$(".NQp5PvHbsg3zw0dqR7BG.tcpt9oq21v1w8DS00Gdq.Kwq17kqGR1gd2i3e8T4j.glgOeYZM68NoKNYki096");
-        divWithChoice.click();
-        plusSubjectBtn.click();
+        divWithChoice.$(this.subjectChoiceAdd.getSearchCriteria()).click();
         this.clickSubjectList().selectSubject(subjectName).clickSubmitSubject();
         return this;
     }
@@ -234,6 +233,11 @@ public class CurriculaCreateOrEditPage {
 
     public CurriculaCreateOrEditPage clickSubjectList() {
         $x("//div[@class = 'mdlBeTDjk4eJspBtgT8g hETISWSYE0TZ8F37t9IZ' and .//span[text() = 'Предмет']]").click();
+        return this;
+    }
+
+    public CurriculaCreateOrEditPage clickAddSubjectInChoice(){
+        this.subjectChoiceAdd.click();
         return this;
     }
 
@@ -304,6 +308,14 @@ public class CurriculaCreateOrEditPage {
         return this;
     }
 
+    public CurriculaCreateOrEditPage setHoursSubChoice(int cell, String value){
+        SelenideElement mainRowDiv = $x("//div[@class = ' rXMpdIDvlcwzffjY4sO4' and .//span[text() = 'Предметы по выбору']]");
+        SelenideElement divCells = mainRowDiv.$(".guSkr79ef8UMyfqDq1sZ");
+        ElementsCollection cells = divCells.$$x(".//div");
+        cells.get(cell).$x(".//input").setValue(value);
+        return this;
+    }
+
     public String getHours(String subject, int cell){
         SelenideElement mainRowDiv = $x("//div[@class = ' rXMpdIDvlcwzffjY4sO4' and .//span[text() = '%s']]".formatted(subject));
         ElementsCollection cells = mainRowDiv.$(".guSkr79ef8UMyfqDq1sZ").$$x(".//div");
@@ -328,6 +340,22 @@ public class CurriculaCreateOrEditPage {
 
         return this;
     }
+    public CurriculaCreateOrEditPage copyHoursSubjectChoice(int cellNum, WeekCopyValue mode){
+        SelenideElement mainRowDiv = $x("//div[@class = ' rXMpdIDvlcwzffjY4sO4' and .//span[text() = 'Предметы по выбору']]");
+        SelenideElement divCells = mainRowDiv.$(".guSkr79ef8UMyfqDq1sZ");
+        ElementsCollection cells = divCells.$$x(".//div");
+        SelenideElement cell = cells.get(cellNum);
+        actions().moveToElement(cell).moveByOffset(5,10 ).click().perform();
+
+        switch (mode){
+            case EVERY -> $x("//button[text() = 'На каждую неделю']").click();
+            case INWEEK -> $x("//button[text() = 'Через неделю']").click();
+            case INTWOWEEKS -> $x("//button[text() = 'Через две недели']").click();
+        }
+
+        return this;
+    }
+
 
     public CurriculaCreateOrEditPage checkAllCellsExistsValue(String subject, String expectedValue){
         SelenideElement rowContent = $x("//div[@class = ' rXMpdIDvlcwzffjY4sO4' and .//span[text() = '%s']]".formatted(subject));
