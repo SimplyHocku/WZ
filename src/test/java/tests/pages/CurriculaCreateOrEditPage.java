@@ -38,6 +38,7 @@ public class CurriculaCreateOrEditPage {
     private final SelenideElement btnSave = $(".wU9TSyFRFc3CpOTQBupH._XYP0roNx135HLimkPnt.w7ECsNGH4Gnnb39mQZw9.Mv0ARbCy0YnB7r_2NLvE.lyW5jmphtuQeL51jZoCw");
 
     public  final SelenideElement editLabel = $x("//h4[contains(text(), 'Редактирование  учебного плана')]");
+    public  final SelenideElement editLabelPattern = $x("//h4[contains(text(), 'Редактирование шаблона учебного плана')]");
     public CurriculaCreateOrEditPage setTitle(String value) {
         boolean isEmpty = Objects.requireNonNull(this.title.getValue()).isEmpty();
         if (!isEmpty){
@@ -109,6 +110,7 @@ public class CurriculaCreateOrEditPage {
 
     public CurriculaCreateOrEditPage clickLevelEducation() {
         this.levelEducation.click();
+        Selenide.sleep(500);
         return this;
     }
 
@@ -120,47 +122,56 @@ public class CurriculaCreateOrEditPage {
             case SOO -> $x("//li[text() = 'СОО']").click();
             case SPO -> $x("//li[text() = 'СПО']").click();
         }
+        Selenide.sleep(500);
         return this;
     }
 
     public CurriculaCreateOrEditPage clickParallel() {
         this.parallelEducation.click();
+        Selenide.sleep(500);
         return this;
     }
 
     public CurriculaCreateOrEditPage selectParallel(String value) {
         $x("//li[text() = '%s']".formatted(value)).click();
+        Selenide.sleep(500);
         return this;
     }
 
     public CurriculaCreateOrEditPage clickFgos() {
         this.fgosEducation.click();
+        Selenide.sleep(500);
         return this;
     }
 
     public CurriculaCreateOrEditPage setFgos(String value) {
         $x("//li[text() = '%s']".formatted(value)).click();
+        Selenide.sleep(500);
         return this;
     }
 
     public CurriculaCreateOrEditPage clickSchedule() {
         this.scheduleEducation.click();
+        Selenide.sleep(500);
         return this;
     }
 
     public CurriculaCreateOrEditPage setSchedule(String value) {
         $x("//li[text() = '%s']".formatted(value)).click();
+        Selenide.sleep(500);
         return this;
     }
 
 
     public CurriculaCreateOrEditPage clickWeek() {
         this.weekEducation.click();
+        Selenide.sleep(500);
         return this;
     }
 
     public CurriculaCreateOrEditPage setWeek(String value) {
         $x("//li[text() = '%s']".formatted(value)).click();
+        Selenide.sleep(500);
         return this;
     }
 
@@ -207,7 +218,7 @@ public class CurriculaCreateOrEditPage {
     }
 
     public List<Object> getDataForPlanTest() {
-        return new ArrayList<Object>(Arrays.asList("TEST_удалиМеня", "ATP", FormEducationValue.OZ, LevelEducationValue.OOO, "9", "ФГОС 3.0", "КУГ для 10У класса", "5"));
+        return new ArrayList<Object>(Arrays.asList("TEST_удалиМеня", "ATP", FormEducationValue.OZ, LevelEducationValue.OOO, "9", "ФГОС 2.0", "КУГ для 10У класса", "5"));
     }
 
 

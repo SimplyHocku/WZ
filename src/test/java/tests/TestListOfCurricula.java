@@ -33,10 +33,15 @@ public class TestListOfCurricula extends Config {
 
     static String plans = "study-plan/list";
     static String patterns = "study-plan/list/templates";
-    private boolean firstTestPassed = false;
+    private boolean createPlanFlag = false;
+    private boolean createPlanPatternFlag = false;
 
-    private boolean isFirstTestFailed() {
-        return !firstTestPassed;
+    private boolean isCreatePlanFlag() {
+        return !createPlanFlag;
+    }
+
+    private boolean isCreatePlanPatternFlag() {
+        return !createPlanPatternFlag;
     }
 
     @BeforeAll
@@ -60,14 +65,14 @@ public class TestListOfCurricula extends Config {
         curriculaTestPage.fillPlan(curriculaTestPage, curriculaTestPage.getDataForPlan()).clickGenerate().expandSubjectArea("Учебные курсы").clickAddSubject("Учебные курсы").
                 clickSubjectList().selectSubject("Астрономия").clickSubmitSubject().setHours("Астрономия", 1, "1").copyHours("Астрономия", 1, WeekCopyValue.EVERY);
         curriculaTestPage.setSubjectChoice("3D-арт").savePlan();
-        firstTestPassed = true;
+        createPlanFlag = true;
 
     }
 
     @Test
     @Order(2)
     @DisplayName("Проверка на соответствие тестового плана")
-    @DisabledIf("isFirstTestFailed")
+    @DisabledIf("isCreatePlanFlag")
     void testCheckCreatedPlan() {
         CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
         List<Object> data = curriculaTestPage.getDataForPlan();
@@ -94,7 +99,7 @@ public class TestListOfCurricula extends Config {
     @Test
     @Order(3)
     @DisplayName("WEBHTCHR-1131 - Редактирование учебного плана")
-    @DisabledIf("isFirstTestFailed")
+    @DisabledIf("isCreatePlanFlag")
     void test1131() {
         CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
         String planName = (String) curriculaTestPage.getDataForPlan().get(0);
@@ -111,7 +116,7 @@ public class TestListOfCurricula extends Config {
     @Test
     @Order(4)
     @DisplayName("Проверка на соответствие тестового плана после редактирования")
-    @DisabledIf("isFirstTestFailed")
+    @DisabledIf("isCreatePlanFlag")
     void testCheckEditedPlan() {
         CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
         List<Object> data = curriculaTestPage.getDataForPlan();
@@ -139,7 +144,7 @@ public class TestListOfCurricula extends Config {
     @Test
     @Order(5)
     @DisplayName("WEBHTCHR-1133 - удаление УП")
-    @DisabledIf("isFirstTestFailed")
+    @DisabledIf("isCreatePlanFlag")
     void test1133() {
         CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
         SelenideElement rowElement = $x("//tr[@class = 'znu3DrCGSbeQf74VU_sQ' and contains(.//text(), '%s')]".formatted("AutomatedTitle_EDITED"));
@@ -153,7 +158,7 @@ public class TestListOfCurricula extends Config {
     @Test
     @Order(6)
     @DisplayName("Проверка удалился ли УП")
-    @DisabledIf("isFirstTestFailed")
+    @DisabledIf("isCreatePlanFlag")
     void testCheckDeletedPlan() {
         CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
         testPage.setSearchValue("AutomatedTitle_EDITED").waitClosingLoader(30);
@@ -163,7 +168,6 @@ public class TestListOfCurricula extends Config {
     @Test
     @Order(7)
     @DisplayName("WEBHTCHR-1067 - создание шаблона УП")
-    @Disabled
     void test1067() {
         testPage.listCurriculaTable.shouldBe(Condition.exist);
         testPage.selectPatternsUrl().clickAddPP();
@@ -171,13 +175,16 @@ public class TestListOfCurricula extends Config {
         curriculaTestPage.fillPlan(curriculaTestPage, curriculaTestPage.getDataForPatternPlan()).clickGenerate().expandSubjectArea("Учебные курсы").
                 clickAddSubject("Учебные курсы").clickSubjectList().selectSubject("Инженерная графика").clickSubmitSubject().
                 setHours("Инженерная графика", 1, "2").copyHours("Инженерная графика", 1, WeekCopyValue.EVERY).
-                setSubjectChoice("3D-арт").setHoursSubChoice(1,"1").copyHoursSubjectChoice(1, WeekCopyValue.EVERY).savePlan();
+                setSubjectChoice("3D-арт").setHoursSubChoice(1, "1").copyHoursSubjectChoice(1, WeekCopyValue.EVERY).savePlan();
         Selenide.sleep(1000);
+        createPlanPatternFlag = true;
     }
+
     @Test
     @Order(8)
     @DisplayName("Проверка на соответствие шаблона УП")
-    void testCheckCreateCurriculaPattern(){
+    @DisabledIf("isCreatePlanPatternFlag")
+    void testCheckCreateCurriculaPattern() {
         CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
         List<Object> data = curriculaTestPage.getDataForPatternPlan();
         String planName = (String) curriculaTestPage.getDataForPatternPlan().get(0);
@@ -199,6 +206,73 @@ public class TestListOfCurricula extends Config {
 
         curriculaTestPage.expandSubjectArea("Учебные курсы").checkAllCellsExistsValue("Инженерная графика", "2");
     }
+
+    @Test
+    @Order(9)
+    @DisplayName("WEBHTCHR-1132 - Редактирование шаблона учебного плана")
+    @DisabledIf("isCreatePlanPatternFlag")
+    void test1132() {
+        CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
+        String planName = (String) curriculaTestPage.getDataForPatternPlan().get(0);
+        testPage.selectPatternsUrl().waitClosingLoader(30).setSearchValue(planName).waitClosingLoader(30).openContextAndSelect(planName, ElementContextMenu.EDIT);
+        curriculaTestPage.editLabelPattern.shouldBe(Condition.exist);
+        curriculaTestPage.setTitle("AutomatedTitlePattern_EDITED");
+        curriculaTestPage.expandSubjectArea("Учебные курсы").clickAddSubject("Учебные курсы");
+        curriculaTestPage.clickSubjectList().selectSubject("Алгоритмика").clickSubmitSubject();
+        curriculaTestPage.setHours("Алгоритмика", 1, "2");
+        curriculaTestPage.copyHours("Алгоритмика", 1, WeekCopyValue.INTWOWEEKS);
+        curriculaTestPage.savePlan();
+    }
+
+    @Test
+    @Order(10)
+    @DisplayName("Проверка на соответствие шаблона УП - после редактирования")
+    @DisabledIf("isCreatePlanPatternFlag")
+    void testCheckEditedPlanPattern() {
+        CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
+        List<Object> data = curriculaTestPage.getDataForPatternPlan();
+        String planName = (String) curriculaTestPage.getDataForPatternPlan().get(0);
+        SelenideElement rowElement = $x("//tr[@class = 'znu3DrCGSbeQf74VU_sQ' and contains(.//text(), '%s')]".formatted(planName));
+
+        testPage.selectPatternsUrl().waitClosingLoader(30).setSearchValue(planName).waitClosingLoader(30);
+        rowElement.shouldBe(Condition.exist);
+        testPage.openContextAndSelect(planName, ElementContextMenu.EDIT);
+        $(".TPZSWYDuKpGEBOskP6qJ").shouldBe(Condition.exist);
+        assertEquals("AutomatedTitlePattern_EDITED", curriculaTestPage.getTitle(), "Заголовок не совпадает");
+        assertEquals(data.get(1), curriculaTestPage.getShortTitle(), "Краткий заголовок не совпадает");
+        assertEquals("Очно-заочная", curriculaTestPage.getFormEducation(), "Форма обучения");
+        assertEquals("ООО", curriculaTestPage.getLevel(), "Уровень образования не совпадает");
+        assertEquals((String) data.get(4), curriculaTestPage.getParallel(), "Параллель не совпадает");
+        assertEquals((String) data.get(5), curriculaTestPage.getFgos(), "ФГОС не совпадает");
+        assertEquals((String) data.get(7), curriculaTestPage.getWeek(), "Неделя не совпадает");
+        curriculaTestPage.scheduleElem.shouldHave(Condition.text((String) data.get(6)));
+        assertEquals((String) data.get(6), curriculaTestPage.getSchedule(), "График не совпадет");
+
+        curriculaTestPage.expandSubjectArea("Учебные курсы").checkCellsExpectedOrContinueValue("Алгоритмика", "2");
+    }
+
+    @Test
+    @Order(11)
+    @DisplayName("WEBHTCHR-1134 - удаление шаблона УП")
+    @DisabledIf("isCreatePlanPatternFlag")
+    void test1134(){
+        CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
+        SelenideElement rowElement = $x("//tr[@class = 'znu3DrCGSbeQf74VU_sQ' and contains(.//text(), '%s')]".formatted("AutomatedTitlePattern_EDITED"));
+        testPage.selectPatternsUrl().waitClosingLoader(30).setSearchValue("AutomatedTitlePattern_EDITED").waitClosingLoader(30);
+        rowElement.shouldBe(Condition.exist);
+        testPage.openContextAndSelect("AutomatedTitlePattern_EDITED", ElementContextMenu.DELETE);
+        testPage.clickCancelDeletePlan().openContextAndSelect("AutomatedTitlePattern_EDITED", ElementContextMenu.DELETE);
+        testPage.clickDeletePlan();
+    }
+    @Test
+    @Order(12)
+    @DisplayName("Проверка удалился ли шаблон УП")
+    @DisabledIf("isCreatePlanPatternFlag")
+    void checkDeletedPlanPattern(){
+        testPage.selectPatternsUrl().waitClosingLoader(30).setSearchValue("AutomatedTitlePattern_EDITED").waitClosingLoader(30);
+        $x("//span[text() = 'Данных для отображения пока нет']").shouldBe(Condition.exist);
+    }
+
 
     @Test
     @Order(14)
@@ -320,12 +394,12 @@ public class TestListOfCurricula extends Config {
         $x("//span[text() = 'Наполнение учебного плана']").shouldBe(Condition.visible);
     }
 
-    @Test
-    @Order(25)
-    @DisplayName("WEBHTCHR-1248 - Переключатель По предметам УП")
-    void test1248() {
-//        TODO
-    }
+//    @Test
+//    @Order(25)
+//    @DisplayName("WEBHTCHR-1248 - Переключатель По предметам УП")
+//    void test1248() {
+////        TODO
+//    }
 
     @Test
     @Order(26)
@@ -337,8 +411,10 @@ public class TestListOfCurricula extends Config {
         curriculaTestPage.fillPlan(curriculaTestPage, curriculaTestPage.getDataForPlanTest()).clickGenerate();
         $x("//span[text() = 'Наполнение учебного плана']").shouldBe(Condition.visible);
         curriculaTestPage.expandSubjectArea("Учебные курсы");
-        SelenideElement btn = $x("//span[text() = 'Добавить предмет']");
-        actions().moveToElement(btn).perform();
+        SelenideElement divContent = $x("//div[@class = 'I4cQQg2x1N0wu85nv4PA' and .//span[text() = 'Предметы по выбору']]");
+        SelenideElement btn = $(divContent).$x(".//span[text() = 'Добавить предмет']");
+//        btn.hover();
+        actions().scrollToElement(btn).perform();
         btn.shouldBe(Condition.visible);
         curriculaTestPage.expandSubjectArea("Учебные курсы");
         $x("//span[text() = 'Добавить предмет']").shouldNotBe(Condition.visible);
