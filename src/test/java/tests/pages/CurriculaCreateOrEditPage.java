@@ -45,6 +45,7 @@ public class CurriculaCreateOrEditPage {
             this.title.sendKeys(Keys.BACK_SPACE);
         }
         this.title.shouldHave(Condition.empty);
+        Selenide.sleep(1000);
         this.title.setValue(value);
         return this;
     }
