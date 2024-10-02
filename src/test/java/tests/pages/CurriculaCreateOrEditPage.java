@@ -5,9 +5,7 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import org.assertj.core.api.Assertions;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.Point;
 
 import java.util.*;
 
@@ -37,21 +35,17 @@ public class CurriculaCreateOrEditPage {
     private final SelenideElement btnSaveSuchPattern = $(".wU9TSyFRFc3CpOTQBupH._XYP0roNx135HLimkPnt.w7ECsNGH4Gnnb39mQZw9.Mv0ARbCy0YnB7r_2NLvE.XSReFeIOyNCXZG6tRWvh");
     private final SelenideElement btnSave = $(".wU9TSyFRFc3CpOTQBupH._XYP0roNx135HLimkPnt.w7ECsNGH4Gnnb39mQZw9.Mv0ARbCy0YnB7r_2NLvE.lyW5jmphtuQeL51jZoCw");
 
-    public  final SelenideElement editLabel = $x("//h4[contains(text(), 'Редактирование  учебного плана')]");
-    public  final SelenideElement editLabelPattern = $x("//h4[contains(text(), 'Редактирование шаблона учебного плана')]");
+    public final SelenideElement editLabel = $x("//h4[contains(text(), 'Редактирование  учебного плана')]");
+    public final SelenideElement editLabelPattern = $x("//h4[contains(text(), 'Редактирование шаблона учебного плана')]");
+
     public CurriculaCreateOrEditPage setTitle(String value) {
         boolean isEmpty = Objects.requireNonNull(this.title.getValue()).isEmpty();
-        if (!isEmpty){
+        if (!isEmpty) {
             this.title.sendKeys(Keys.LEFT_CONTROL, "A");
             this.title.sendKeys(Keys.BACK_SPACE);
         }
         this.title.shouldHave(Condition.empty);
         this.title.setValue(value);
-        return this;
-    }
-
-    public CurriculaCreateOrEditPage clearTitle() {
-        Selenide.executeJavaScript("arguments[0].value = '';", this.title);
         return this;
     }
 
@@ -61,7 +55,7 @@ public class CurriculaCreateOrEditPage {
 
     public CurriculaCreateOrEditPage setShortTitle(String value) {
         boolean isEmpty = Objects.requireNonNull(this.shortTitle.getValue()).isEmpty();
-        if (!isEmpty){
+        if (!isEmpty) {
             this.shortTitle.sendKeys(Keys.LEFT_CONTROL, "A");
             this.shortTitle.sendKeys(Keys.BACK_SPACE);
         }
@@ -72,25 +66,28 @@ public class CurriculaCreateOrEditPage {
     public String getShortTitle() {
         return this.shortTitle.getValue();
     }
-    public String getFormEducation(){
+
+    public String getFormEducation() {
         return $$(".Z5eYm_jkqZySVYXnxWEL.rWtYydTGjRz8vkOQ02JO.JN9rAf0zV1reNm6noHyf").get(0).getText();
     }
-    public String getLevel(){
+
+    public String getLevel() {
         return $$(".Z5eYm_jkqZySVYXnxWEL.rWtYydTGjRz8vkOQ02JO.JN9rAf0zV1reNm6noHyf").get(1).getText();
     }
-    public String getParallel(){
+
+    public String getParallel() {
         return $$(".Z5eYm_jkqZySVYXnxWEL.rWtYydTGjRz8vkOQ02JO.JN9rAf0zV1reNm6noHyf").get(2).getText();
     }
 
-    public String getFgos(){
+    public String getFgos() {
         return $$(".Z5eYm_jkqZySVYXnxWEL.rWtYydTGjRz8vkOQ02JO.JN9rAf0zV1reNm6noHyf").get(3).getText();
     }
 
-    public String getSchedule(){
+    public String getSchedule() {
         return $$(".Z5eYm_jkqZySVYXnxWEL.rWtYydTGjRz8vkOQ02JO.JN9rAf0zV1reNm6noHyf").get(4).getText();
     }
 
-    public String getWeek(){
+    public String getWeek() {
         return $$(".Z5eYm_jkqZySVYXnxWEL.rWtYydTGjRz8vkOQ02JO.JN9rAf0zV1reNm6noHyf").get(5).getText();
     }
 
@@ -185,7 +182,7 @@ public class CurriculaCreateOrEditPage {
         return this;
     }
 
-    public String getAdaptiveFieldValue(){
+    public String getAdaptiveFieldValue() {
         return $$(".Z5eYm_jkqZySVYXnxWEL.rWtYydTGjRz8vkOQ02JO.JN9rAf0zV1reNm6noHyf").get(1).getText();
     }
 
@@ -247,7 +244,7 @@ public class CurriculaCreateOrEditPage {
         return this;
     }
 
-    public CurriculaCreateOrEditPage clickAddSubjectInChoice(){
+    public CurriculaCreateOrEditPage clickAddSubjectInChoice() {
         this.subjectChoiceAdd.click();
         return this;
     }
@@ -257,9 +254,28 @@ public class CurriculaCreateOrEditPage {
         return this;
     }
 
+    public CurriculaCreateOrEditPage clickSubjectContext(String subjectName) {
+        SelenideElement divElement = $x("//div[@class = 'MuiPaper-root  Rwarq6SkPk7aSZFsWJlw MuiPaper-elevation1 MuiPaper-rounded' and .//span[text() = '%s']]".formatted(subjectName));
+        SelenideElement context = divElement.$$x(".//*").get(5);
+        context.click();
+        return this;
+    }
+
+    public CurriculaCreateOrEditPage togleContext(SubjectContext mode) {
+        switch (mode) {
+            case BASE, DEEP -> $(".Z5eYm_jkqZySVYXnxWEL.S2sJkCPO00awQt2VmEb3.IhWORM0RCfM_znxFDK4e.f9beIf71USLYc6Whu1Vc.wAtyJ0i7l3YPshBJLyon.vRxmGEclCuL2nigE4mfc.qndpeq8TiQPG3xORXAM4").click();
+
+            case BLOCK ->
+                    $$(".V6PjQJ7weyUcKY0zptpl.kFuclPh01xPRoThg68pb").get(0).click();
+            case DELETE ->
+                    $$(".V6PjQJ7weyUcKY0zptpl.kFuclPh01xPRoThg68pb").get(1).click();
+        }
+        return this;
+    }
+
     public CurriculaCreateOrEditPage setSubjectSearchField(String value) {
         boolean isEmpty = Objects.requireNonNull(this.searchSubjectField.getValue()).isEmpty();
-        if (!isEmpty){
+        if (!isEmpty) {
             this.searchSubjectField.sendKeys(Keys.LEFT_CONTROL, "A");
             this.searchSubjectField.sendKeys(Keys.BACK_SPACE);
         }
@@ -296,7 +312,9 @@ public class CurriculaCreateOrEditPage {
     }
 
     public CurriculaCreateOrEditPage setPattern(String patternName) {
-        $x("//label[@class='MuiFormLabel-root MuiInputLabel-root HYUVjQy9TBuYwcyYaWjw OIZywbwrQHHOpr7_sUp6 JbNllXTS6oImUvZYZSgH MuiInputLabel-animated' and .//span[text() = '%s' ]]".formatted(patternName)).click();
+        $(".Z5eYm_jkqZySVYXnxWEL.IhWORM0RCfM_znxFDK4e.ErrgUCgBVpOGk2uD7y4R.IfzJEdB1pkbERSIASybF.li6XPmPhUz6LzxGrMDzr").setValue(patternName);
+        $x("//input[@name = '%s']".formatted(patternName)).click();
+        $x("//button[@class = 'wU9TSyFRFc3CpOTQBupH _XYP0roNx135HLimkPnt w7ECsNGH4Gnnb39mQZw9 Mv0ARbCy0YnB7r_2NLvE lyW5jmphtuQeL51jZoCw' and .//span[text() = 'Выбрать']]").click();
         return this;
     }
 
@@ -310,7 +328,7 @@ public class CurriculaCreateOrEditPage {
         return this;
     }
 
-    public CurriculaCreateOrEditPage setHours(String subject, int cell, String value){
+    public CurriculaCreateOrEditPage setHours(String subject, int cell, String value) {
         SelenideElement mainRowDiv = $x("//div[@class = ' rXMpdIDvlcwzffjY4sO4' and .//span[text() = '%s']]".formatted(subject));
         SelenideElement subjectNameDiv = mainRowDiv.$x(".//div[span[text() = '%s']]".formatted(subject)).parent().parent();
         SelenideElement divCells = subjectNameDiv.sibling(0);
@@ -319,7 +337,7 @@ public class CurriculaCreateOrEditPage {
         return this;
     }
 
-    public CurriculaCreateOrEditPage setHoursSubChoice(int cell, String value){
+    public CurriculaCreateOrEditPage setHoursSubChoice(int cell, String value) {
         SelenideElement mainRowDiv = $x("//div[@class = ' rXMpdIDvlcwzffjY4sO4' and .//span[text() = 'Предметы по выбору']]");
         SelenideElement divCells = mainRowDiv.$(".guSkr79ef8UMyfqDq1sZ");
         ElementsCollection cells = divCells.$$x(".//div");
@@ -327,23 +345,22 @@ public class CurriculaCreateOrEditPage {
         return this;
     }
 
-    public String getHours(String subject, int cell){
+    public String getHours(String subject, int cell) {
         SelenideElement mainRowDiv = $x("//div[@class = ' rXMpdIDvlcwzffjY4sO4' and .//span[text() = '%s']]".formatted(subject));
         ElementsCollection cells = mainRowDiv.$(".guSkr79ef8UMyfqDq1sZ").$$x(".//div");
         return cells.get(cell).$x(".//input").getValue();
     }
 
 
-
-    public CurriculaCreateOrEditPage copyHours(String subject, int cellNum, WeekCopyValue mode){
+    public CurriculaCreateOrEditPage copyHours(String subject, int cellNum, WeekCopyValue mode) {
         SelenideElement mainRowDiv = $x("//div[@class = ' rXMpdIDvlcwzffjY4sO4' and .//span[text() = '%s']]".formatted(subject));
         SelenideElement subjectNameDiv = mainRowDiv.$x(".//div[span[text() = '%s']]".formatted(subject)).parent().parent();
         SelenideElement divCells = subjectNameDiv.sibling(0).$x(".//div[@class = ' guSkr79ef8UMyfqDq1sZ']");
         ElementsCollection cells = divCells.$$x(".//div");
         SelenideElement cell = cells.get(cellNum);
-        actions().moveToElement(cell).moveByOffset(5,10 ).click().perform();
+        actions().moveToElement(cell).moveByOffset(5, 10).click().perform();
 
-        switch (mode){
+        switch (mode) {
             case EVERY -> $x("//button[text() = 'На каждую неделю']").click();
             case INWEEK -> $x("//button[text() = 'Через неделю']").click();
             case INTWOWEEKS -> $x("//button[text() = 'Через две недели']").click();
@@ -351,14 +368,15 @@ public class CurriculaCreateOrEditPage {
 
         return this;
     }
-    public CurriculaCreateOrEditPage copyHoursSubjectChoice(int cellNum, WeekCopyValue mode){
+
+    public CurriculaCreateOrEditPage copyHoursSubjectChoice(int cellNum, WeekCopyValue mode) {
         SelenideElement mainRowDiv = $x("//div[@class = ' rXMpdIDvlcwzffjY4sO4' and .//span[text() = 'Предметы по выбору']]");
         SelenideElement divCells = mainRowDiv.$(".guSkr79ef8UMyfqDq1sZ");
         ElementsCollection cells = divCells.$$x(".//div");
         SelenideElement cell = cells.get(cellNum);
-        actions().moveToElement(cell).moveByOffset(5,10 ).click().perform();
+        actions().moveToElement(cell).moveByOffset(5, 10).click().perform();
 
-        switch (mode){
+        switch (mode) {
             case EVERY -> $x("//button[text() = 'На каждую неделю']").click();
             case INWEEK -> $x("//button[text() = 'Через неделю']").click();
             case INTWOWEEKS -> $x("//button[text() = 'Через две недели']").click();
@@ -368,7 +386,7 @@ public class CurriculaCreateOrEditPage {
     }
 
 
-    public CurriculaCreateOrEditPage checkAllCellsExistsValue(String subject, String expectedValue){
+    public CurriculaCreateOrEditPage checkAllCellsExistsValue(String subject, String expectedValue) {
         SelenideElement rowContent = $x("//div[@class = ' rXMpdIDvlcwzffjY4sO4' and .//span[text() = '%s']]".formatted(subject));
         SelenideElement subjectNameDiv = rowContent.$x(".//div[span[text() = '%s']]".formatted(subject)).parent().parent();
         SelenideElement divCells = subjectNameDiv.sibling(0).$x(".//div[@class = ' guSkr79ef8UMyfqDq1sZ']");
@@ -377,7 +395,7 @@ public class CurriculaCreateOrEditPage {
         return this;
     }
 
-    public CurriculaCreateOrEditPage checkCellsExpectedOrContinueValue(String subject, String expectedValue){
+    public CurriculaCreateOrEditPage checkCellsExpectedOrContinueValue(String subject, String expectedValue) {
         SelenideElement rowContent = $x("//div[@class = ' rXMpdIDvlcwzffjY4sO4' and .//span[text() = '%s']]".formatted(subject));
         SelenideElement subjectNameDiv = rowContent.$x(".//div[span[text() = '%s']]".formatted(subject)).parent().parent();
         SelenideElement divCells = subjectNameDiv.sibling(0).$x(".//div[@class = ' guSkr79ef8UMyfqDq1sZ']");
@@ -410,9 +428,18 @@ public class CurriculaCreateOrEditPage {
         NOT
     }
 
-    public enum WeekCopyValue{
+    public enum WeekCopyValue {
         EVERY,
         INWEEK,
         INTWOWEEKS
     }
+
+    public enum SubjectContext {
+        BASE,
+        DEEP,
+        BLOCK,
+        DELETE
+    }
 }
+
+

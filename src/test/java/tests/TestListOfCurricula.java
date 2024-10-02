@@ -9,19 +9,15 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.DisabledIf;
 import tests.pages.ListOfCurriculaPage;
 import tests.pages.ListOfCurriculaPage.ElementContextMenu;
-import tests.pages.ListOfCurriculaPage.PageView;
 import tests.pages.CurriculaCreateOrEditPage;
 import tests.pages.ListOfCurriculaPage.PlanOption;
-import tests.pages.CurriculaCreateOrEditPage.FormEducationValue;
-import tests.pages.CurriculaCreateOrEditPage.FormEducationValue;
 import tests.pages.CurriculaCreateOrEditPage.LevelEducationValue;
 import tests.pages.CurriculaCreateOrEditPage.AdaptiveValue;
 import tests.pages.CurriculaCreateOrEditPage.WeekCopyValue;
-import org.assertj.core.api.Assertions.*;
-
+import tests.pages.CurriculaCreateOrEditPage.SubjectContext;
 
 import java.util.List;
-import java.util.Objects;
+
 
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -146,7 +142,6 @@ public class TestListOfCurricula extends Config {
     @DisplayName("WEBHTCHR-1133 - удаление УП")
     @DisabledIf("isCreatePlanFlag")
     void test1133() {
-        CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
         SelenideElement rowElement = $x("//tr[@class = 'znu3DrCGSbeQf74VU_sQ' and contains(.//text(), '%s')]".formatted("AutomatedTitle_EDITED"));
         testPage.setSearchValue("AutomatedTitle_EDITED").waitClosingLoader(30);
         rowElement.shouldBe(Condition.exist);
@@ -160,7 +155,7 @@ public class TestListOfCurricula extends Config {
     @DisplayName("Проверка удалился ли УП")
     @DisabledIf("isCreatePlanFlag")
     void testCheckDeletedPlan() {
-        CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
+
         testPage.setSearchValue("AutomatedTitle_EDITED").waitClosingLoader(30);
         $x("//span[text() = 'Данных для отображения пока нет']").shouldBe(Condition.exist);
     }
@@ -255,8 +250,7 @@ public class TestListOfCurricula extends Config {
     @Order(11)
     @DisplayName("WEBHTCHR-1134 - удаление шаблона УП")
     @DisabledIf("isCreatePlanPatternFlag")
-    void test1134(){
-        CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
+    void test1134() {
         SelenideElement rowElement = $x("//tr[@class = 'znu3DrCGSbeQf74VU_sQ' and contains(.//text(), '%s')]".formatted("AutomatedTitlePattern_EDITED"));
         testPage.selectPatternsUrl().waitClosingLoader(30).setSearchValue("AutomatedTitlePattern_EDITED").waitClosingLoader(30);
         rowElement.shouldBe(Condition.exist);
@@ -264,11 +258,12 @@ public class TestListOfCurricula extends Config {
         testPage.clickCancelDeletePlan().openContextAndSelect("AutomatedTitlePattern_EDITED", ElementContextMenu.DELETE);
         testPage.clickDeletePlan();
     }
+
     @Test
     @Order(12)
     @DisplayName("Проверка удалился ли шаблон УП")
     @DisabledIf("isCreatePlanPatternFlag")
-    void checkDeletedPlanPattern(){
+    void checkDeletedPlanPattern() {
         testPage.selectPatternsUrl().waitClosingLoader(30).setSearchValue("AutomatedTitlePattern_EDITED").waitClosingLoader(30);
         $x("//span[text() = 'Данных для отображения пока нет']").shouldBe(Condition.exist);
     }
@@ -394,13 +389,6 @@ public class TestListOfCurricula extends Config {
         $x("//span[text() = 'Наполнение учебного плана']").shouldBe(Condition.visible);
     }
 
-//    @Test
-//    @Order(25)
-//    @DisplayName("WEBHTCHR-1248 - Переключатель По предметам УП")
-//    void test1248() {
-////        TODO
-//    }
-
     @Test
     @Order(26)
     @DisplayName("WEBHTCHR-1249 - Список предметной области УП")
@@ -420,19 +408,102 @@ public class TestListOfCurricula extends Config {
         $x("//span[text() = 'Добавить предмет']").shouldNotBe(Condition.visible);
     }
 
+    @Test
+    @Order(27)
+    @DisplayName("WEBHTCHR-1250 - Кнопка Добавить предмет УП")
+    void test1250() {
+        testPage.waitClosingLoader(30).listCurriculaTable.shouldBe(Condition.visible);
+        testPage.clickAddPP().selectPlanOption(PlanOption.PARALLEL);
+        CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
+        curriculaTestPage.fillPlan(curriculaTestPage, curriculaTestPage.getDataForPlanTest()).clickGenerate();
+        $x("//span[text() = 'Наполнение учебного плана']").shouldBe(Condition.visible);
+        curriculaTestPage.expandSubjectArea("Учебные курсы").clickAddSubject("Учебные курсы").
+                clickSubjectList().selectSubject("3D-арт").clickSubmitSubject();
+    }
+
+    @Test
+    @Order(28)
+    @DisplayName("WEBHTCHR-1251 - Иконка удаления предмета УП")
+    void test1251() {
+        testPage.waitClosingLoader(30).listCurriculaTable.shouldBe(Condition.visible);
+        testPage.clickAddPP().selectPlanOption(PlanOption.PARALLEL);
+        CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
+        curriculaTestPage.fillPlan(curriculaTestPage, curriculaTestPage.getDataForPlanTest()).clickGenerate();
+        $x("//span[text() = 'Наполнение учебного плана']").shouldBe(Condition.visible);
+        curriculaTestPage.expandSubjectArea("Учебные курсы").clickAddSubject("Учебные курсы").
+                clickSubjectList().selectSubject("3D-арт").clickCancelSubject();
+    }
+
+    @Test
+    @Order(29)
+    @DisplayName("WEBHTCHR-1252 - Ячейка времени предмета УП")
+    void test1252() {
+        testPage.waitClosingLoader(30).listCurriculaTable.shouldBe(Condition.visible);
+        testPage.clickAddPP().selectPlanOption(PlanOption.PARALLEL);
+        CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
+        curriculaTestPage.fillPlan(curriculaTestPage, curriculaTestPage.getDataForPlanTest()).clickGenerate();
+        $x("//span[text() = 'Наполнение учебного плана']").shouldBe(Condition.visible);
+        curriculaTestPage.expandSubjectArea("Учебные курсы").clickAddSubject("Учебные курсы").
+                clickSubjectList().selectSubject("3D-арт").clickSubmitSubject().setHours("3D-арт", 1, "1");
+    }
+
+    @Test
+    @Order(30)
+    @DisplayName("WEBHTCHR-1253 - Кебаб-меню предмета УП")
+    void test1253() {
+        testPage.waitClosingLoader(30).listCurriculaTable.shouldBe(Condition.visible);
+        testPage.clickAddPP().selectPlanOption(PlanOption.PARALLEL);
+        CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
+        curriculaTestPage.fillPlan(curriculaTestPage, curriculaTestPage.getDataForPlanTest()).clickGenerate();
+        $x("//span[text() = 'Наполнение учебного плана']").shouldBe(Condition.visible);
+        curriculaTestPage.expandSubjectArea("Учебные курсы").clickAddSubject("Учебные курсы").
+                clickSubjectList().selectSubject("3D-арт").clickSubmitSubject().clickSubjectContext("3D-арт").
+                togleContext(SubjectContext.DEEP).togleContext(SubjectContext.BASE).togleContext(SubjectContext.BLOCK).
+                togleContext(SubjectContext.DELETE);
+        $x("//section[@class = ' kFZ_JTAUp4Mn80XJMdQN Pm2Q0W_6NkFeFT3udzqT']").shouldBe(Condition.visible);
+    }
+
+    @Test
+    @Order(31)
+    @DisplayName("WEBHTCHR-1257 - Кнопка Применить шаблон УП")
+    void test1257() {
+        testPage.waitClosingLoader(30).listCurriculaTable.shouldBe(Condition.visible);
+        testPage.clickAddPP().selectPlanOption(PlanOption.PARALLEL);
+        CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
+        curriculaTestPage.fillPlan(curriculaTestPage, curriculaTestPage.getDataForPlanTest()).clickGenerate().clickConfirmPattern();
+        String beforePattern = $(".TPZSWYDuKpGEBOskP6qJ").getText();
+        $x("//span[text() = 'Обратите внимание, что при применении шаблона учебного плана будут использованы нагрузка и предметы из него. Все данные, введенные ранее, будут удалены. ']").shouldBe(Condition.visible);
+        curriculaTestPage.setPattern("НЕ УДАЛЯЙ АТАТА БУДЕТ");
+        String afterPattern = $(".TPZSWYDuKpGEBOskP6qJ").getText();
+        Assertions.assertNotEquals(beforePattern, afterPattern, "Изменении после применения шаблона нет");
+    }
+
+    @Test
+    @Order(32)
+    @DisplayName("WEBHTCHR-1256 - Кнопка Сохранить как шаблон УП")
+    void test1256() {
+        testPage.waitClosingLoader(30).listCurriculaTable.shouldBe(Condition.visible);
+        testPage.clickAddPP().selectPlanOption(PlanOption.PARALLEL);
+        CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
+        curriculaTestPage.fillPlan(curriculaTestPage, curriculaTestPage.getDataForPlan()).clickGenerate().expandSubjectArea("Учебные курсы").clickAddSubject("Учебные курсы").
+                clickSubjectList().selectSubject("Астрономия").clickSubmitSubject().setSubjectChoice("3D-арт").saveSuchPattern();
+        $x("//span[text() = 'Шаблон сохранен']").shouldBe(Condition.visible);
+    }
+
 
     @Test
     @Disabled
     void test() {
-        CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
+        testPage.waitClosingLoader(30).listCurriculaTable.shouldBe(Condition.visible);
         testPage.clickAddPP().selectPlanOption(PlanOption.PARALLEL);
-
-        curriculaTestPage.fillPlan(curriculaTestPage, curriculaTestPage.getDataForPlanTest()).clickGenerate().expandSubjectArea("Учебные курсы").clickAddSubject("Учебные курсы").
-                clickSubjectList().selectSubject("Астрономия").clickSubmitSubject();
-        curriculaTestPage.setSubjectChoice("3D-арт");
-
-        curriculaTestPage.expandSubjectArea("Учебные курсы").setHours("Астрономия", 1, "3").copyHours("Астрономия", 1, WeekCopyValue.EVERY);
-        Selenide.sleep(5000);
+        CurriculaCreateOrEditPage curriculaTestPage = new CurriculaCreateOrEditPage();
+        curriculaTestPage.fillPlan(curriculaTestPage, curriculaTestPage.getDataForPlanTest()).clickGenerate();
+        $x("//span[text() = 'Наполнение учебного плана']").shouldBe(Condition.visible);
+        curriculaTestPage.expandSubjectArea("Учебные курсы").clickAddSubject("Учебные курсы").
+                clickSubjectList().selectSubject("3D-арт").clickSubmitSubject().clickSubjectContext("3D-арт").
+                togleContext(SubjectContext.BASE).
+                togleContext(SubjectContext.DEEP).
+                togleContext(SubjectContext.BLOCK);
 
 
     }
