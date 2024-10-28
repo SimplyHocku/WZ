@@ -69,6 +69,11 @@ public class CurriculaAndStudents {
         return this;
     }
 
+    public CurriculaAndStudents clickReset() {
+        $x("//span[text() = 'Сбросить']").click();
+        return this;
+    }
+
     public CurriculaAndStudents selectAllStudents() {
         $x("//tr[@class = 'znu3DrCGSbeQf74VU_sQ pTz7BTrZNhYPlYi1QAqg']/td[1]//*[local-name()='svg']").click();
         return this;
@@ -135,6 +140,26 @@ public class CurriculaAndStudents {
         }
         throw new NullPointerException("Элемента не найдено");
     }
+
+    public CurriculaAndStudents clickAddCurricula() {
+        $x("//span[text() = 'Добавить график']").click();
+        return this;
+    }
+
+    public CurriculaAndStudents clickDeleteCurricula(String namePlan, int option){
+        SelenideElement plan = $x("//td[.//span[text() = '%s']]".formatted(namePlan));
+        plan.hover();
+        SelenideElement btnForDeletePlan = plan.$$x(".//button").get(1);
+        btnForDeletePlan.click();
+        if (option == 0){
+            $x("//div[@class = ' JHHSSmXrEDClsNtfHZOf']//button[.//span[text() = 'Отмена']]").click();
+        }
+        else if(option == 1){
+            $x("//div[@class = ' JHHSSmXrEDClsNtfHZOf']//button[.//span[text() = 'Удалить']]").click();
+        }
+        return this;
+    }
+
     public CurriculaAndStudents bindToCurricula(String titleCurricula, String studentName) {
         var curriculaTitleElement = $x("//span[text() = '%s']".formatted(titleCurricula));
         LinkedHashMap<String, Double> coordinatesCurricula = Selenide.executeJavaScript("return arguments[0].getBoundingClientRect();", curriculaTitleElement);
@@ -146,12 +171,12 @@ public class CurriculaAndStudents {
         return this;
     }
 
-    public CurriculaAndStudents inParallelCancel(){
+    public CurriculaAndStudents inParallelCancel() {
         $x("//button[.//span[text() = 'Отмена']]").click();
         return this;
     }
 
-    public CurriculaAndStudents inParallelSave(){
+    public CurriculaAndStudents inParallelSave() {
         $x("//button[.//span[text() = 'Сохранить']]").click();
         return this;
     }

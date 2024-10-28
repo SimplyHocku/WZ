@@ -27,8 +27,8 @@ public class TestCurriculaAndStudents extends Config {
 
     @Test
     void test() {
-        testPage.selectInParallel().selectParalel("1").expandClass("1-И").bindToCurricula("УП22", "А И С").inParallelCancel();
-        testPage.bindToCurricula("УП22", "А И С").inParallelSave();
+        testPage.selectInParallel().selectParalel("1");
+        testPage.clickDeleteCurricula("1 к", 1);
 
     }
 }
