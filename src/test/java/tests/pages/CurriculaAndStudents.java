@@ -84,15 +84,29 @@ public class CurriculaAndStudents {
         return this;
     }
 
-    public CurriculaAndStudents selectCurricula(String planName) {
+    public CurriculaAndStudents selectMainCurricula(String planName) {
         $(".NQp5PvHbsg3zw0dqR7BG.U9gZqh4HBcPhDx8E2kxw.Kwq17kqGR1gd2i3e8T4j.t_nfk5KQShwEOZOwRQAr").click();
         $x("//li[text() = '%s']".formatted(planName)).click();
         return this;
     }
 
-    public CurriculaAndStudents setPeriod(String date, String dateTo) {
-        $(".Z5eYm_jkqZySVYXnxWEL.IhWORM0RCfM_znxFDK4e.ErrgUCgBVpOGk2uD7y4R.IfzJEdB1pkbERSIASybF.qLLJbCbx70ffOWhy2sj7.rzaiEMnocKsMWjls6Bgw.hyOyJfC6odz66Ul2rFKR").click();
+    public CurriculaAndStudents selectCurriculaForStudent(String student, String planName) {
+        $x("//tr[.//a[text() = '%s']]//*[local-name() = 'svg' and @class = 'NQp5PvHbsg3zw0dqR7BG U9gZqh4HBcPhDx8E2kxw Kwq17kqGR1gd2i3e8T4j t_nfk5KQShwEOZOwRQAr']".formatted(student)).click();
+        $x("//li[text() = '%s']".formatted(planName)).click();
+        return this;
+    }
 
+    public CurriculaAndStudents clickMainPeriod() {
+        $$(".Z5eYm_jkqZySVYXnxWEL.IhWORM0RCfM_znxFDK4e.ErrgUCgBVpOGk2uD7y4R.IfzJEdB1pkbERSIASybF.qLLJbCbx70ffOWhy2sj7.rzaiEMnocKsMWjls6Bgw.hyOyJfC6odz66Ul2rFKR").get(0).click();
+        return this;
+    }
+
+    public CurriculaAndStudents clickPeriodForStudent(String studentName) {
+        $x("//tr[.//a[text() = '%s']]//input[@class = 'Z5eYm_jkqZySVYXnxWEL IhWORM0RCfM_znxFDK4e ErrgUCgBVpOGk2uD7y4R IfzJEdB1pkbERSIASybF qLLJbCbx70ffOWhy2sj7 rzaiEMnocKsMWjls6Bgw hyOyJfC6odz66Ul2rFKR']".formatted(studentName)).click();
+        return this;
+    }
+
+    public CurriculaAndStudents setPeriod(String date, String dateTo) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         LocalDate startDate = LocalDate.parse(date, formatter);
         LocalDate endDate = LocalDate.parse(dateTo, formatter);
@@ -108,6 +122,16 @@ public class CurriculaAndStudents {
 
         actions().scrollToElement(headerWithMonthEnd).perform();
         headerWithMonthEnd.parent().$x(".//span[text() = '%s']".formatted(endDate.getDayOfMonth())).click();
+        return this;
+    }
+
+    public CurriculaAndStudents clickSubmitBind() {
+        $(".NQp5PvHbsg3zw0dqR7BG.tcpt9oq21v1w8DS00Gdq.lqW5z34Kw0trzNSMYrXf.iHQYNPDlyB9iKeoLOX6w").click();
+        return this;
+    }
+
+    public CurriculaAndStudents clickCancelSubmit() {
+        $(".NQp5PvHbsg3zw0dqR7BG.lqW5z34Kw0trzNSMYrXf.iHQYNPDlyB9iKeoLOX6w.vVZkz0JBBuxM9PLodGK3").click();
         return this;
     }
 
@@ -146,15 +170,22 @@ public class CurriculaAndStudents {
         return this;
     }
 
-    public CurriculaAndStudents clickDeleteCurricula(String namePlan, int option){
+    public CurriculaAndStudents clickEditCurricula(String namePlan) {
+        SelenideElement plan = $x("//td[.//span[text() = '%s']]".formatted(namePlan));
+        plan.hover();
+        SelenideElement btnForDeletePlan = plan.$$x(".//button").get(0);
+        btnForDeletePlan.click();
+        return this;
+    }
+
+    public CurriculaAndStudents clickDeleteCurricula(String namePlan, int option) {
         SelenideElement plan = $x("//td[.//span[text() = '%s']]".formatted(namePlan));
         plan.hover();
         SelenideElement btnForDeletePlan = plan.$$x(".//button").get(1);
         btnForDeletePlan.click();
-        if (option == 0){
+        if (option == 0) {
             $x("//div[@class = ' JHHSSmXrEDClsNtfHZOf']//button[.//span[text() = 'Отмена']]").click();
-        }
-        else if(option == 1){
+        } else if (option == 1) {
             $x("//div[@class = ' JHHSSmXrEDClsNtfHZOf']//button[.//span[text() = 'Удалить']]").click();
         }
         return this;
@@ -168,6 +199,11 @@ public class CurriculaAndStudents {
         var radioButton = findElementForBind(coordinatesCurricula, studentName);
         radioButton.click();
 
+        return this;
+    }
+
+    public CurriculaAndStudents clickAddBind(String student) {
+        $x("//tr[.//a[text() = '%s']]//td[@class  = ' xF_IFEe0QuJX0ySbgMHT']/button//*[local-name()='svg']".formatted(student)).click();
         return this;
     }
 
