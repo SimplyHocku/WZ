@@ -86,13 +86,23 @@ public class TestCurriculaAndStudents extends Config {
     @Test
     @DisplayName("WEBHTCHR-1338 - По классу. Добавление новой привязки")
     void test1338() {
-        testPage.selectParalel("12").selectClass("12-Е");
-        testPage.clickAddBind("А А Н").clickPeriodForStudent("А А Н").setPeriod("30.10.2024", "31.10.2024").
-                selectCurriculaForStudent("А А Н", "1").clickCancelSubmit();
+        String student = "Я А К";
+        String planName = "тест Катя";
+        String startAt = "29.10.2024";
+        String finishAt = "30.10.2024";
 
-        testPage.selectParalel("12").selectClass("12-Е");
-        testPage.clickAddBind("А А Н").clickPeriodForStudent("А А Н").setPeriod("30.10.2024", "31.10.2024").
-                selectCurriculaForStudent("А А Н", "1").clickSubmitBind();
+        testPage.selectParalel("4").selectClass("4-Э");
+        testPage.clickAddBind(student).clickPeriodForStudent(student).setPeriod(startAt, finishAt).
+                selectCurriculaForStudent(student, planName).clickCancelSubmit();
+
+        testPage.selectParalel("4").selectClass("4-Э");
+        testPage.clickAddBind(student).clickPeriodForStudent(student).setPeriod(startAt, finishAt).
+                selectCurriculaForStudent(student, planName).clickSubmitBind();
+
+        $x("//tr[.//a[text() = '%s'] and .//span[text() = '%s'] and .//span[text() = '%s - %s']]".formatted(student, planName, startAt, finishAt)).shouldBe(Condition.visible);
     }
 
+//    @Test
+//    @DisplayName("")
+// TODO
 }
