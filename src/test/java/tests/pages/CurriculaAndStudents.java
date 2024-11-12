@@ -16,7 +16,7 @@ import java.util.Objects;
 
 
 import static com.codeborne.selenide.Selenide.*;
-
+import static com.codeborne.selenide.Selenide.$$x;
 public class CurriculaAndStudents {
 
     private SelenideElement paralelPointClick;
@@ -125,6 +125,38 @@ public class CurriculaAndStudents {
         return this;
     }
 
+
+    public CurriculaAndStudents clickContextRow(String studentName, String period, ContextOptionRow option) {
+        SelenideElement rowWithStudent = $x("//tr[.//a[text() = '%s']]".formatted(studentName));
+        ElementsCollection assignments = rowWithStudent.$$x(".//span[@class = 'wo7Ab8Szrw_1kpfz6YdS IhWORM0RCfM_znxFDK4e']");
+        int index = 0;
+        $(".iyHhc6P8W_bLXRv6v9KL").shouldBe(Condition.visible);
+        for (int count = 0; count < assignments.size(); count++ ){
+            assignments.get(count).shouldBe(Condition.visible);
+            if (assignments.get(count).getText().equals(period)){
+                index = count;
+                break;
+            }
+        }
+        rowWithStudent.$x("./td[5]").$$x(".//button").get(index).click();
+
+
+        switch (option){
+            case EDIT -> $x("//button[text() = 'Редактировать']").click();
+            case DELETE -> $x("//button[text() = 'Удалить']").click();
+        }
+        return this;
+    }
+
+    public int getCountAssignment(String studentName){
+        SelenideElement rowWithAssignment = $x("//tr[.//a[text() = '%s']]/td[4]".formatted(studentName));
+        $(".iyHhc6P8W_bLXRv6v9KL").shouldBe(Condition.visible);
+
+        int count = rowWithAssignment.$$x(".//span").size();
+        return count;
+
+    }
+
     public CurriculaAndStudents clickSubmitBind() {
         $(".NQp5PvHbsg3zw0dqR7BG.tcpt9oq21v1w8DS00Gdq.lqW5z34Kw0trzNSMYrXf.iHQYNPDlyB9iKeoLOX6w").click();
         return this;
@@ -207,14 +239,23 @@ public class CurriculaAndStudents {
         return this;
     }
 
-    public CurriculaAndStudents inParallelCancel() {
+    public CurriculaAndStudents contextWindowCancel() {
         $x("//button[.//span[text() = 'Отмена']]").click();
         return this;
     }
 
-    public CurriculaAndStudents inParallelSave() {
+    public CurriculaAndStudents contextWindowSave() {
         $x("//button[.//span[text() = 'Сохранить']]").click();
         return this;
+    }
+    public CurriculaAndStudents contextWindowDelete() {
+        $x("//button[.//span[text() = 'Удалить']]").click();
+        return this;
+    }
+
+    public enum ContextOptionRow{
+        EDIT,
+        DELETE
     }
 
 }

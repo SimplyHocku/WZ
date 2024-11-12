@@ -102,7 +102,23 @@ public class TestCurriculaAndStudents extends Config {
         $x("//tr[.//a[text() = '%s'] and .//span[text() = '%s'] and .//span[text() = '%s - %s']]".formatted(student, planName, startAt, finishAt)).shouldBe(Condition.visible);
     }
 
-//    @Test
-//    @DisplayName("")
-// TODO
+    @Test
+    @DisplayName("WEBHTCHR-1341 - По классу. Удаление привязки")
+    void test1341(){
+        String parallel = "1";
+        String _class = "1-И";
+        String studentName = "А И В";
+        String periodForDelete = "01.10.2024 - 31.10.2024";
+        int beforeDelete =  testPage.selectParalel(parallel).selectClass(_class).getCountAssignment(studentName);
+
+        testPage.clickContextRow(studentName, periodForDelete, CurriculaAndStudents.ContextOptionRow.DELETE).
+                contextWindowCancel();
+        testPage.clickContextRow(studentName, periodForDelete, CurriculaAndStudents.ContextOptionRow.DELETE).
+                contextWindowDelete();
+
+        int afterDelete =  testPage.getCountAssignment(studentName);
+        Assertions.assertNotEquals(afterDelete, beforeDelete, "Количество привязок не изменилось");
+
+    }
+
 }
