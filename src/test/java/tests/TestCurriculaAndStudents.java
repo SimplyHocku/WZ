@@ -1,6 +1,7 @@
 package tests;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import org.WZ.config.Config;
@@ -105,35 +106,35 @@ public class TestCurriculaAndStudents extends Config {
 
     @Test
     @DisplayName("WEBHTCHR-1341 - По классу. Удаление привязки")
-    void test1341(){
+    void test1341() {
         String parallel = "1";
         String _class = "1-И";
         String studentName = "А И В";
         String periodForDelete = "01.10.2024 - 31.10.2024";
-        int beforeDelete =  testPage.selectParalel(parallel).selectClass(_class).getCountAssignment(studentName);
+        int beforeDelete = testPage.selectParalel(parallel).selectClass(_class).getCountAssignment(studentName);
 
         testPage.clickContextRow(studentName, periodForDelete, CurriculaAndStudents.ContextOptionRow.DELETE).
                 contextWindowCancel();
         testPage.clickContextRow(studentName, periodForDelete, CurriculaAndStudents.ContextOptionRow.DELETE).
                 contextWindowDelete();
 
-        int afterDelete =  testPage.getCountAssignment(studentName);
+        int afterDelete = testPage.getCountAssignment(studentName);
         Assertions.assertNotEquals(afterDelete, beforeDelete, "Количество привязок не изменилось");
 
     }
 
     @Test
     @DisplayName("WEBHTCHR-1342 - По классу. Редактирование существующей привязки")
-    void test1342(){
+    void test1342() {
         String parallel = "1";
         String _class = "1-И";
         String studentName = "А И В";
         String periodForEdit = "01.09.2024 — 30.09.2024";
         String periodAfterEdit = "01.09.2024 — 20.09.2024";
         testPage.selectParalel(parallel).selectClass(_class)
-                .clickContextRow(studentName,periodForEdit, CurriculaAndStudents.ContextOptionRow.EDIT).
+                .clickContextRow(studentName, periodForEdit, CurriculaAndStudents.ContextOptionRow.EDIT).
                 clickPeriodForStudent(studentName).setPeriod("01.09.2024", "20.09.2024").clickCancelSubmit();
-        testPage.clickContextRow(studentName,periodForEdit, CurriculaAndStudents.ContextOptionRow.EDIT).
+        testPage.clickContextRow(studentName, periodForEdit, CurriculaAndStudents.ContextOptionRow.EDIT).
                 clickPeriodForStudent(studentName).setPeriod("01.09.2024", "20.09.2024").clickSubmitBind();
 
         $x("//span[text() = 'Сохранено успешно']").shouldBe(Condition.visible);
@@ -141,7 +142,7 @@ public class TestCurriculaAndStudents extends Config {
 
     @Test
     @DisplayName("WEBHTCHR-1344 - По классу. Ошибка при добавлении привязки с пересечением периодов разных УП")
-    void test1344(){
+    void test1344() {
         String parallel = "1";
         String _class = "1-И";
         String studentName = "А И В";
@@ -153,7 +154,7 @@ public class TestCurriculaAndStudents extends Config {
 
     @Test
     @DisplayName("WEBHTCHR-1345 - По классу. Ошибка при добавлении привязки с пересечением периодов одного УП")
-    void test1345(){
+    void test1345() {
         String parallel = "1";
         String _class = "1-И";
         String studentName = "А И В";
@@ -165,7 +166,7 @@ public class TestCurriculaAndStudents extends Config {
 
     @Test
     @DisplayName("WEBHTCHR-1346 - По классу. Добавление новой привязки нескольким ученикам одновременно")
-    void test1346(){
+    void test1346() {
         String parallel = "1";
         String _class = "1-И";
         testPage.selectParalel(parallel).selectClass(_class).selectMainCurricula("УП22").
@@ -176,16 +177,54 @@ public class TestCurriculaAndStudents extends Config {
 
     @Test
     @DisplayName("WEBHTCHR-1348 - По классу. Наличие элементов при выбранных значениях параллели и класса")
-    void test1348(){
+    void test1348() {
         String studentName = "А И В";
         testPage.selectParalel("1").selectClass("1-И");
-        SelenideElement plusBind  = $x("//tr[.//a[text() = '%s']]/td[6]//*[local-name() = 'svg']".formatted(studentName));
+        SelenideElement plusBind = $x("//tr[.//a[text() = '%s']]/td[6]//*[local-name() = 'svg']".formatted(studentName));
         plusBind.hover();
         $x("//span[text() = 'Добавить привязку']").shouldBe(Condition.exist);
         testPage.clickContextRow("А И В", "-", CurriculaAndStudents.ContextOptionRow.DEMO);
         $x("//button[text() = 'Редактировать']").shouldBe(Condition.visible);
         $x("//button[text() = 'Удалить']").shouldBe(Condition.visible);
 
+    }
+
+    @Test
+    @DisplayName("WEBHTCHR-1357 - Удаление привязки УП к учащимся")
+    void test1357() {
+        testPage.selectInParallel().clickDeleteAllBind("1-И");
+        $x("//div[@class = 'D0Lm7cvJvrpX5urg62YR']//button[.//span[text() = 'Отмена']]").click();
+        testPage.clickDeleteAllBind("1-Л").contextWindowDelete();
+    }
+
+    @Test
+    @DisplayName("WEBHTCHR-1358 - Привязка УП к ученику")
+    void test1358() {
+        String studentName = "А А А";
+        String plan = "УП22";
+        String _class = "1-И";
+        testPage.selectInParallel().expandClass(_class).bindToCurricula(plan, studentName).contextWindowCancel();
+        testPage.bindToCurricula(plan, studentName).contextWindowSave();
+    }
+
+    @Test
+    @DisplayName("WEBHTCHR-1360 - Фильтрация и сброс, вкладка По параллели")
+    void test1360() {
+        testPage.selectInParallel().selectParalel("3").clickReset();
+        $x("//div[@class = 'hnWCePjI8XGQrc1e50Py lCYsN7syvm2qhN0uISEs' and .//span[text() = '1']]").shouldBe(Condition.exist);
+    }
+
+    @Test
+    @DisplayName("WEBHTCHR-1361 - Наличие элементов при выбранном значении параллели")
+    void test1361(){
+        testPage.selectInParallel();
+        String namePlan = "УП22";
+        SelenideElement plan = $x("//td[.//span[text() = '%s']]".formatted(namePlan));
+        plan.hover();
+        ElementsCollection buttons = plan.$$x(".//*[local-name() = 'svg']");
+        for(SelenideElement button: buttons){
+            button.shouldBe(Condition.visible);
+        }
     }
 
 }

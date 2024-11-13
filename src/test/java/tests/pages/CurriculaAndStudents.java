@@ -228,6 +228,11 @@ public class CurriculaAndStudents {
         return this;
     }
 
+    public CurriculaAndStudents clickDeleteAllBind(String className){
+        $x("//tr[.//span[text() = '%s']]/td[.//button]//button".formatted(className)).click();
+        return this;
+    }
+
     public CurriculaAndStudents bindToCurricula(String titleCurricula, String studentName) {
         var curriculaTitleElement = $x("//span[text() = '%s']".formatted(titleCurricula));
         LinkedHashMap<String, Double> coordinatesCurricula = Selenide.executeJavaScript("return arguments[0].getBoundingClientRect();", curriculaTitleElement);
