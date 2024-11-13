@@ -85,7 +85,8 @@ public class CurriculaAndStudents {
     }
 
     public CurriculaAndStudents selectMainCurricula(String planName) {
-        $(".NQp5PvHbsg3zw0dqR7BG.U9gZqh4HBcPhDx8E2kxw.Kwq17kqGR1gd2i3e8T4j.t_nfk5KQShwEOZOwRQAr").click();
+        $x("//span[text() = 'Учебный план']").parent().parent().parent().$x(".//*[local-name() = 'svg']").click();
+//        $(".NQp5PvHbsg3zw0dqR7BG.U9gZqh4HBcPhDx8E2kxw.Kwq17kqGR1gd2i3e8T4j.t_nfk5KQShwEOZOwRQAr").click(); //NQp5PvHbsg3zw0dqR7BG U9gZqh4HBcPhDx8E2kxw Kwq17kqGR1gd2i3e8T4j t_nfk5KQShwEOZOwRQAr
         $x("//li[text() = '%s']".formatted(planName)).click();
         return this;
     }
@@ -128,6 +129,10 @@ public class CurriculaAndStudents {
 
     public CurriculaAndStudents clickContextRow(String studentName, String period, ContextOptionRow option) {
         SelenideElement rowWithStudent = $x("//tr[.//a[text() = '%s']]".formatted(studentName));
+        if (option == ContextOptionRow.DEMO){
+            rowWithStudent.$x("./td[5]").$x(".//button").click();
+            return this;
+        }
         ElementsCollection assignments = rowWithStudent.$$x(".//span[@class = 'wo7Ab8Szrw_1kpfz6YdS IhWORM0RCfM_znxFDK4e']");
         int index = 0;
         $(".iyHhc6P8W_bLXRv6v9KL").shouldBe(Condition.visible);
@@ -255,7 +260,8 @@ public class CurriculaAndStudents {
 
     public enum ContextOptionRow{
         EDIT,
-        DELETE
+        DELETE,
+        DEMO
     }
 
 }

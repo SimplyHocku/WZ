@@ -2,6 +2,7 @@ package tests;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideElement;
 import org.WZ.config.Config;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Assertions.*;
@@ -118,6 +119,72 @@ public class TestCurriculaAndStudents extends Config {
 
         int afterDelete =  testPage.getCountAssignment(studentName);
         Assertions.assertNotEquals(afterDelete, beforeDelete, "Количество привязок не изменилось");
+
+    }
+
+    @Test
+    @DisplayName("WEBHTCHR-1342 - По классу. Редактирование существующей привязки")
+    void test1342(){
+        String parallel = "1";
+        String _class = "1-И";
+        String studentName = "А И В";
+        String periodForEdit = "01.09.2024 — 30.09.2024";
+        String periodAfterEdit = "01.09.2024 — 20.09.2024";
+        testPage.selectParalel(parallel).selectClass(_class)
+                .clickContextRow(studentName,periodForEdit, CurriculaAndStudents.ContextOptionRow.EDIT).
+                clickPeriodForStudent(studentName).setPeriod("01.09.2024", "20.09.2024").clickCancelSubmit();
+        testPage.clickContextRow(studentName,periodForEdit, CurriculaAndStudents.ContextOptionRow.EDIT).
+                clickPeriodForStudent(studentName).setPeriod("01.09.2024", "20.09.2024").clickSubmitBind();
+
+        $x("//span[text() = 'Сохранено успешно']").shouldBe(Condition.visible);
+    }
+
+    @Test
+    @DisplayName("WEBHTCHR-1344 - По классу. Ошибка при добавлении привязки с пересечением периодов разных УП")
+    void test1344(){
+        String parallel = "1";
+        String _class = "1-И";
+        String studentName = "А И В";
+        String planForAdd = "УП22";
+        testPage.selectParalel(parallel).selectClass(_class).clickAddBind(studentName).selectCurriculaForStudent(studentName, planForAdd).clickSubmitBind();
+
+        $x("//span[text() = 'Период привязки пересекается с периодом существующих привязок']").shouldBe(Condition.visible);
+    }
+
+    @Test
+    @DisplayName("WEBHTCHR-1345 - По классу. Ошибка при добавлении привязки с пересечением периодов одного УП")
+    void test1345(){
+        String parallel = "1";
+        String _class = "1-И";
+        String studentName = "А И В";
+        String planForAdd = "керпвапрвапр";
+        testPage.selectParalel(parallel).selectClass(_class).clickAddBind(studentName).selectCurriculaForStudent(studentName, planForAdd).clickSubmitBind();
+
+        $x("//span[text() = 'Уже есть привязки на указанные даты']").shouldBe(Condition.visible);
+    }
+
+    @Test
+    @DisplayName("WEBHTCHR-1346 - По классу. Добавление новой привязки нескольким ученикам одновременно")
+    void test1346(){
+        String parallel = "1";
+        String _class = "1-И";
+        testPage.selectParalel(parallel).selectClass(_class).selectMainCurricula("УП22").
+                selectStudent("В К А").selectStudent("В Ф М").clickBindSelected();
+
+        $x("//span[text() = 'Привязка сохранена']").shouldBe(Condition.visible);
+    }
+
+    @Test
+    @DisplayName("WEBHTCHR-1348 - По классу. Наличие элементов при выбранных значениях параллели и класса")
+    void test1348(){
+        String studentName = "А И В";
+        testPage.selectParalel("1").selectClass("1-И");
+        SelenideElement plusBind  = $x("//tr[.//a[text() = '%s']]/td[6]//*[local-name() = 'svg']".formatted(studentName));
+        plusBind.hover();
+        $x("//span[text() = 'Добавить привязку']").shouldBe(Condition.exist);
+        testPage.clickContextRow("А И В", "-", CurriculaAndStudents.ContextOptionRow.DEMO);
+        $x("//button[text() = 'Редактировать']").shouldBe(Condition.visible);
+        $x("//button[text() = 'Удалить']").shouldBe(Condition.visible);
 
     }
 
