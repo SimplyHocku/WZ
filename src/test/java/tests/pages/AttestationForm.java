@@ -161,14 +161,11 @@ public class AttestationForm {
         return this;
     }
 
-    public AttestationForm setDataForPeriod(int index, String date, String dateTo) {
-//        String merge = String.join(" — ", date, dateTo);
-        String merge = "2011202424112024";
+    public AttestationForm setDataForPeriod(int index, String mergeDate) {
         SelenideElement fieldOfPeriod = $$x("//tbody/tr[@class = 'znu3DrCGSbeQf74VU_sQ'][1]/td[4]//div[@class = 'hnWCePjI8XGQrc1e50Py lCYsN7syvm2qhN0uISEs']/div[%d]//input".formatted(index)).get(1);
-//        fieldOfPeriod.click();
-//        fieldOfPeriod.clear();
+        fieldOfPeriod.click();
+        fieldOfPeriod.sendKeys(Keys.LEFT_CONTROL, "A");
         fieldOfPeriod.sendKeys(Keys.BACK_SPACE);
-//        actions().sendKeys(Keys.BACK_SPACE);
         for (int i = 0; i < merge.length(); i ++ ){
             actions().sendKeys(Character.toString(merge.charAt(i))).perform();
         }
