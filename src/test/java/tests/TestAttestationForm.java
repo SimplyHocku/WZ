@@ -25,6 +25,6 @@ public class TestAttestationForm extends Config {
 
     @Test
     void test(){
-        testPage.selectForm("1-И", "Английская филология", AttestationForm.FormValue.SUCH, "новый куг1");
+        testPage.clickToPeriods().clickAddSchedulePeriods().setNewPeriodTitleMain("Тестовое").increaseCountPeriods(1).setNewPeriodTitle(2, "Test").setDataForPeriod(1, "20.11.2024", "23.11.2024");
     }
 }
